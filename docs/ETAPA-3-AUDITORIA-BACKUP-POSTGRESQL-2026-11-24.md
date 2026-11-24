@@ -216,3 +216,18 @@ Foi criado o documento operacional [Etapa 3D — Plano de proteção PostgreSQL 
 - **Integridade/restore:** a entrada de backup do PostgreSQL identificada em 24/11/2026 segue **não testada**; nenhuma mudança no banco, no plano, em produção ou no GitHub `main`.
 
 **Próximo passo:** obter do proprietário a designação do operador titular e substituto e confirmação de 19h / Cloudflare R2; atualizar quadro de aceite sem divulgar nomes pessoais no GitHub, se possível. Nenhuma ação de implantação foi autorizada na Etapa 3F.
+
+## 13. Etapa 3G — confirmação de responsáveis, horário e fornecedor (24/11/2026)
+
+Documento aberto: [Etapa 3G — decisões operacionais para backups Core 1](./ETAPA-3G-DECISOES-OPERACIONAIS-BACKUP-CORE1-2026-11-24.md).
+
+**Situação:** fase iniciada e checklist de decisão registrado no GitHub; **sem decisões presumidas**.
+
+- **Operador principal e substituto:** titular ainda não designou pessoas; cobertura de finais de semana e feriados **não comprovada**. Os nomes e contatos não devem ser replicados em repositório.
+- **Horário:** 19h (fuso `America/Sao_Paulo`) com conferência às 19h30 **proposto, não aceito**.
+- **Armazenamento externo:** Cloudflare R2 Standard privado **recomendado**, mas não escolhido/autorizado; Backblaze B2 como alternativa.
+- **Custódia de chave e retenção 7/4/3:** propostas não aprovadas.
+- **Plano Core 1:** sem backup automático nativo; a captura de 24/11/2026 mostrou um ponto listado como disponível, ainda não testado.
+- **Sem execução:** nenhum backup, download, restauração, criação de conta/bucket, chave, assinatura, GitHub merge, deploy ou comando no banco.
+
+**Próximo passo:** receber as escolhas do proprietário e registrar **apenas estados de aprovação por função**. A aprovação de política da Etapa 3G, por si só, não autoriza movimentação de dados nem configuração de infraestrutura.
