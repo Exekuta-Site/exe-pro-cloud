@@ -27,3 +27,6 @@ npm-debug.log*
 # Manifesto gerado para cada build homologado (nunca subir manualmente)
 .exe-pro-build-manifest.json
 .exe-pro-build-manifest.json.*.tmp
+
+# Pacote local de distribuicao opcional (nao comitar binarios e dados)
+.prebuilt-dist/
