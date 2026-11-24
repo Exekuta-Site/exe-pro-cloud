@@ -188,3 +188,17 @@ Foi criado o documento operacional [Etapa 3D — Plano de proteção PostgreSQL 
 **Risco pendente:** o único backup listado como disponível ainda **não foi testado** quanto à integridade/recuperabilidade. A rotina diária e cópias externas continuam apenas como **plano**, não proteção ativa.
 
 **Próxima decisão sugerida:** revisar calendário, responsável, retenção e destino externo; então definir uma etapa operacional futura com autorizações separadas. PR #3 permanece em rascunho e sem merge.
+
+## 11. Etapa 3E — política operacional e comparação de custos (24/11/2026)
+
+**Documento concluído:** [Etapa 3E — Política operacional Core 1 e custos](./ETAPA-3E-POLITICA-OPERACIONAL-CORE1-CUSTOS-2026-11-24.md).
+
+- **Papéis definidos por função, ainda sem pessoas designadas:** administrador principal aprova; operador de backup executa a rotina; substituto cobre ausências; custodiante das chaves protege criptografia; técnico só atua em restores isolados expressamente autorizados.
+- **Horário proposto:** 19h de Brasília diariamente, inclusive fins de semana/feriados, com checagem/escalação às 19h30. **Nenhum agendamento ou lembrete foi criado.**
+- **Retenção proposta:** 7 versões diárias, 4 semanais, 3 mensais **fora da Shard Cloud**; até 7 backups recentes + 1 vaga pré-deploy nos 8 slots do painel, exigindo política de rotação sob autorização separada. **Nenhuma exclusão foi autorizada.**
+- **Armazenamento externo em avaliação:** Cloudflare R2 Standard privado como preferência; Backblaze B2 privado como alternativa. Ambos mostram franquia gratuita de 10 GB (condições diferem). Custos em cenários de 14 backups de 100 MB / 1 GB / 5 GB por arquivo: R2 aproximadamente US$0 / US$0,06 / US$0,90 por mês; B2 US$0 / US$0,03 / US$0,42, excluindo trabalho humano, impostos, operações extras, custos de transferência e eventual contratação. **71 MB de uso do DB não comprova tamanho de backup.**
+- **Regra de confidencialidade:** criptografia antes do upload, MFA, bucket privado, chave separada e plano de recuperação da chave; revisar legislação e contrato antes de transferir dados.
+- **Recuperabilidade:** continua **não comprovada** até realizar restore documentado em banco isolado com aprovação futura.
+- **Sem alterações reais:** nenhuma criação/download/restore/exclusão de backup, nenhuma conta/bucket externo, nenhum upgrade, nenhum deploy ou comando no banco.
+
+**Próxima decisão:** na Etapa 3F, atribuir pessoas às funções, aceitar ou ajustar horário e escolher storage para preparação. Essa decisão não autorizará transferências de dados nem operações no Shard Cloud.
