@@ -171,3 +171,20 @@ Nenhuma alteração foi efetuada no banco de produção ou nos recursos do Shard
 6. Exigir homologação de restauração em instância **isolada**, após aprovação separada e sem expor dados pessoais, antes de declarar recuperabilidade comprovada.
 
 **Estado da Etapa 3C:** requisito de plano/elegibilidade **esclarecido**; integridade e recuperabilidade **ainda pendentes**. Nenhuma escrita no PostgreSQL, alteração de assinatura, restauração, backup novo ou deploy foi realizada.
+
+## 10. Etapa 3D — plano de proteção do Core 1 (24/11/2026)
+
+**Planejamento concluído; implantação NÃO autorizada e NÃO executada.**
+
+Foi criado o documento operacional [Etapa 3D — Plano de proteção PostgreSQL no Core 1](./ETAPA-3D-PLANO-PROTECAO-POSTGRESQL-CORE1-2026-11-24.md), contendo:
+
+- Frequência manual proposta: **diária às 19h de Brasília (UTC−3)**, inclusive fins de semana, com responsável e substituto a designar; backup adicional antes de alterações de risco.
+- Gestão dos **oito slots do painel**: até sete cópias recentes e reserva de uma vaga pré-release, sem apagar o ponto de 24/11/2026 sem aprovação e evidência de substitutos.
+- Política externa proposta: **7 diárias, 4 semanais e 3 mensais** sob criptografia, controle de acesso/MFA, armazenamento independente e conferência SHA-256 de artefatos criptografados.
+- **RPO visado ≤24h** somente se houver execução bem-sucedida a cada 24h. **RTO não conhecido**, a medir no primeiro teste de restauração isolada.
+- Runbook futuro de restauração em **PostgreSQL separado**, incluindo isolamento de jobs e integrações, verificação de integridade e descarte seguro; exige autorização expressa específica.
+- Não foram criados backups nem realizados downloads, restores, deleções, deploys, alterações de assinatura ou comandos no banco.
+
+**Risco pendente:** o único backup listado como disponível ainda **não foi testado** quanto à integridade/recuperabilidade. A rotina diária e cópias externas continuam apenas como **plano**, não proteção ativa.
+
+**Próxima decisão sugerida:** revisar calendário, responsável, retenção e destino externo; então definir uma etapa operacional futura com autorizações separadas. PR #3 permanece em rascunho e sem merge.
