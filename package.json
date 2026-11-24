@@ -12,7 +12,11 @@
     "migrate": "node tools/migrate.js",
     "db:test": "node tools/test-db.js",
     "hash-password": "node tools/hash-password.js",
-    "import:sqlite": "node tools/import-sqlite.js"
+    "import:sqlite": "node tools/import-sqlite.js",
+    "build:prebuilt": "npm run build && npm run seal:prebuilt",
+    "seal:prebuilt": "node tools/prebuilt-artifact.js seal",
+    "check:prebuilt": "node tools/prebuilt-artifact.js verify",
+    "start:prebuilt": "npm run check:prebuilt && node server.js"
   },
   "dependencies": {
     "pg": "^8.13.0"

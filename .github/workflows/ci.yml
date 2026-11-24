@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
   build:
@@ -24,6 +23,12 @@ jobs:
 
       - name: Build and validate
         run: npm run build
+
+      - name: Verify opt-in prebuilt artifact contract
+        run: npm run seal:prebuilt && npm run check:prebuilt
+
+      - name: Prebuilt startup regression tests
+        run: node --test tests/prebuilt-artifact.test.js
 
       - name: WhatsApp regression tests
         run: node --test tests/portal-response-headers.test.js tools/whatsapp420/history.test.js tools/whatsapp420/cleanup.test.js tools/site440/lead.test.js

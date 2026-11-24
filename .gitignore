@@ -23,3 +23,7 @@ exe-pro-cloud*.zip
 # Logs
 *.log
 npm-debug.log*
+
+# Manifesto gerado para cada build homologado (nunca subir manualmente)
+.exe-pro-build-manifest.json
+.exe-pro-build-manifest.json.*.tmp
