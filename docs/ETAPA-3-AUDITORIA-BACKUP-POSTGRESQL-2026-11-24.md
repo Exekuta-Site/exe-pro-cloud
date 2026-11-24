@@ -72,3 +72,37 @@ Fontes públicas:
 4. Se houver backups, planejar **restore de prova em ambiente isolado**, com janela, acesso e proteção de dados previamente aprovados.
 
 **Conclusão nesta data:** documentação e roteiro criados no GitHub; **o backup real do PostgreSQL e sua restaurabilidade seguem não comprovados**. Não houve nenhuma alteração no Shard Cloud ou no PostgreSQL.
+
+## 6. Etapa 3B — inspeção do painel da instância PostgreSQL (24/11/2026)
+
+**Status: INICIADA; aguardando captura do painel do banco.** Esta etapa não autorizou comandos, criação de backups, restaurações nem mudanças na produção.
+
+### Validação da origem
+
+- Repositório `Exekuta-Site/exe-pro-cloud` confirmado como **Private**.
+- PR #3 segue como **rascunho** sobre a branch de auditoria. Nenhum merge ou deploy foi solicitado.
+- A conexão disponível nesta conversa permite auditoria do GitHub, mas **não fornece acesso autenticado ao painel PostgreSQL do Shard Cloud**; portanto, não houve consulta direta aos backups reais.
+- A Shard Cloud declara que backups de aplicações e backups de bancos são gerenciados no contexto de seus respectivos recursos. Há backups manuais e automáticos para recursos elegíveis; essa informação pública **não comprova** a configuração ou o histórico desta instância específica.
+
+### Inspeção solicitada ao proprietário (somente leitura)
+
+1. Abrir a página principal do Shard Cloud e procurar **Bancos de Dados** (sair dos detalhes da aplicação `exe-pro-cloud`).
+2. Selecionar a instância PostgreSQL que atende o EXE PRO, sem copiar credenciais.
+3. Abrir **Backups** e registrar datas, status e se o ponto pertence ao banco, não ao app.
+4. Se houver tela de configurações, apenas consultar se existe backup automático habilitado, frequência, retenção e recuperação para ponto no tempo; não ativar nada.
+5. Enviar print com credenciais, URLs de conexão e dados pessoais ocultos. Se não encontrar o menu, enviar somente a navegação do painel sem valores secretos.
+
+### Evidência ainda não recebida
+
+| Campo | Valor/estado |
+| --- | --- |
+| Nome identificável não sensível da instância | Aguardando print |
+| Último backup PostgreSQL com sucesso | Não verificado |
+| Automaticidade / frequência | Não verificado |
+| Retenção real da instância | Não verificado |
+| PITR | Não verificado |
+| Restore em instância isolada | Não realizado; exige autorização separada |
+
+Próxima atualização deste documento ocorrerá **após o recebimento da evidência visual**. Não concluir que o backup existe, falta ou é restaurável a partir de páginas genéricas da plataforma.
+
+Referências públicas: https://shardcloud.app/pt-br/resources/backups e https://shardcloud.app/pt-br/resources/databases.
