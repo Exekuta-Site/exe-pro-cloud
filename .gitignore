@@ -1,0 +1,25 @@
+# Credenciais e arquivos locais
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+# Diretórios locais e caches
+node_modules/
+.cache/
+.deps_cache
+.automation-400-ready
+.shardcloud
+# Dumps e backups não devem entrar no Git
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+backup*.zip
+exe-pro-cloud*.zip
+# Logs
+*.log
+npm-debug.log*
