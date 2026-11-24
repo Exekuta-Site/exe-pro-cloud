@@ -202,3 +202,17 @@ Foi criado o documento operacional [Etapa 3D — Plano de proteção PostgreSQL 
 - **Sem alterações reais:** nenhuma criação/download/restore/exclusão de backup, nenhuma conta/bucket externo, nenhum upgrade, nenhum deploy ou comando no banco.
 
 **Próxima decisão:** na Etapa 3F, atribuir pessoas às funções, aceitar ou ajustar horário e escolher storage para preparação. Essa decisão não autorizará transferências de dados nem operações no Shard Cloud.
+
+## 12. Etapa 3F — checklist de implantação e decisões de aprovação (24/11/2026)
+
+**Documento criado:** [Etapa 3F — Prontidão de implantação e Gates A–D](./ETAPA-3F-PRONTIDAO-IMPLANTACAO-BACKUP-POSTGRESQL-2026-11-24.md).
+
+- **Política de execução proposta:** backup manual diário às **19h**, conferência às **19h30**, inclusive sábados, domingos e feriados. **Ainda não ativado**.
+- **Papéis por função:** administrador aprova; operador titular executa; substituto cobre ausências; custodiante protege chaves; técnico fica responsável pelo futuro restore isolado. **Não foram informados/designados nomes e não se presumiu acesso.**
+- **Escolha técnica proposta:** Cloudflare R2 **Standard privado** como destino externo, sem acesso público, criptografia antes do upload e segregação das chaves; Backblaze B2 permanece alternativa. **Não houve contratação, criação de bucket nem credencial**.
+- **Retenção proposta:** 7 diárias + 4 semanais + 3 mensais fora da Shard Cloud; reserva no painel de até 7 pontos recentes + 1 slot pré-release, exigindo rotação sob aprovação específica.
+- **Custos:** cenário de armazenamento documentado; franquias e faixas não significam custo garantido. O tamanho real do backup continua não conhecido.
+- **Quatro gates:** (A) nomes, calendário e RPO; (B) storage, contrato e criptografia; (C) operações reais de backup, download e upload **somente com aprovação específica posterior**; (D) teste de restore em instância isolada **somente com aprovação específica posterior**.
+- **Integridade/restore:** a entrada de backup do PostgreSQL identificada em 24/11/2026 segue **não testada**; nenhuma mudança no banco, no plano, em produção ou no GitHub `main`.
+
+**Próximo passo:** obter do proprietário a designação do operador titular e substituto e confirmação de 19h / Cloudflare R2; atualizar quadro de aceite sem divulgar nomes pessoais no GitHub, se possível. Nenhuma ação de implantação foi autorizada na Etapa 3F.
