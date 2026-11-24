@@ -27,8 +27,20 @@ jobs:
       - name: Verify opt-in prebuilt artifact contract
         run: npm run seal:prebuilt && npm run check:prebuilt
 
-      - name: Prebuilt startup regression tests
-        run: node --test tests/prebuilt-artifact.test.js
+      - name: Package verified artifact without deployment
+        run: npm run package:prebuilt && npm run check:bundle
+
+      - name: Simulate archive transport and extraction without starting the server
+        run: |
+          PACKAGE_DIR=".prebuilt-dist/exe-pro-prebuilt-$(node -p 'require("./package.json").version')"
+          tar -C "$PACKAGE_DIR" --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner --format=ustar -cf - . | gzip -n > "$RUNNER_TEMP/exe-pro-prebuilt.tar.gz"
+          mkdir -p "$RUNNER_TEMP/exe-pro-transferred"
+          tar -xzf "$RUNNER_TEMP/exe-pro-prebuilt.tar.gz" -C "$RUNNER_TEMP/exe-pro-transferred"
+          node tools/bundle-prebuilt.js verify "$RUNNER_TEMP/exe-pro-transferred"
+          (cd "$RUNNER_TEMP/exe-pro-transferred" && node tools/prebuilt-artifact.js verify)
+
+      - name: Prebuilt startup and package regression tests
+        run: node --test tests/prebuilt-artifact.test.js tests/bundle-prebuilt.test.js
 
       - name: WhatsApp regression tests
         run: node --test tests/portal-response-headers.test.js tools/whatsapp420/history.test.js tools/whatsapp420/cleanup.test.js tools/site440/lead.test.js
