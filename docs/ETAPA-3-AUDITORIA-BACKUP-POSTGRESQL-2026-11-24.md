@@ -231,3 +231,11 @@ Documento aberto: [Etapa 3G — decisões operacionais para backups Core 1](./ET
 - **Sem execução:** nenhum backup, download, restauração, criação de conta/bucket, chave, assinatura, GitHub merge, deploy ou comando no banco.
 
 **Próximo passo:** receber as escolhas do proprietário e registrar **apenas estados de aprovação por função**. A aprovação de política da Etapa 3G, por si só, não autoriza movimentação de dados nem configuração de infraestrutura.
+
+## 14. Encerramento do planejamento extra de backups (24/11/2026)
+
+Por solicitação expressa do proprietário, **encerrar o planejamento adicional**, não continuar a exigir designação de pessoas, horários, escolha de Cloudflare R2/Backblaze B2, criação de rotina ou teste de restore como parte desta conversa. **Manter o backup previamente identificado no painel** e preservar este diagnóstico/planos no GitHub apenas como histórico, sem sugerir que estejam implementados.
+
+A interface mostrava 1/8 backups para `exe-pro-db`, ponto de 24/11/2026 11:20:52, mas recuperação **não foi testada**. Nenhum novo backup, download, exclusão, restauração, alteração de assinatura, deploy, merge ou ação em produção ocorreu.
+
+**Próxima prioridade aprovada de desenvolvimento:** voltar aos PRs de código já preparados, começando pelo PR #1, cabeçalhos de segurança do Portal, em revisão isolada e sem merge/deploy. **Correção do diagnóstico de upload:** embora `readBody` genérico use 5 MiB, as rotas de arquivo do Portal chamam `portalReadJsonLarge` com teto de 12 MiB para suportar JSON/base64 de arquivos de até 8 MiB; não considerar divergência como defeito confirmado nem alterar upload sem reprodução.
