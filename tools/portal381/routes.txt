@@ -1,0 +1,98 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/portal/operations'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      return json(res,200,await portalOperations(ps));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/tickets'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      try{
+        const out=await portalTicketCreate(ps,await readBody(req));
+        return json(res,200,{ok:true,...out,operations:await portalOperations(ps)});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/tickets/message'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      try{
+        const body=await readBody(req),ticketId=validId(body.ticketId,180);
+        if(!ticketId)return json(res,400,{ok:false,error:'Chamado invalido.'});
+        await portalTicketAddMessage({ticketId,leadId:ps.leadId,authorType:'Cliente',authorId:ps.userId,authorName:ps.username,body:body.message});
+        return json(res,200,{ok:true,operations:await portalOperations(ps)});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/files/upload'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      try{
+        const body=await portalReadJsonLarge(req),upload=portalParseUpload(body);
+        const ticketId=body.ticketId?validId(body.ticketId,180):null;
+        if(ticketId){
+          const ticket=await one(pool,'SELECT ticket_id FROM portal_tickets WHERE ticket_id=$1 AND lead_id=$2',[ticketId,ps.leadId]);
+          if(!ticket)return json(res,404,{ok:false,error:'Chamado nao encontrado para este cliente.'});
+        }
+        const stored=await portalStoreFile({leadId:ps.leadId,ticketId,category:body.category||'Arquivo',visibility:'Cliente',upload,authorType:'Cliente',authorId:ps.userId,authorName:ps.username});
+        return json(res,200,{ok:true,...stored,operations:await portalOperations(ps)});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='GET'&&url.pathname.startsWith('/api/portal/files/')&&url.pathname.endsWith('/download')){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      const parts=url.pathname.split('/'),fileId=validId(parts[4],180);
+      if(!fileId)return json(res,400,{ok:false,error:'Arquivo invalido.'});
+      const row=await portalFileRow(fileId);
+      if(!row||row.lead_id!==ps.leadId||row.visibility!=='Cliente')return json(res,404,{ok:false,error:'Arquivo nao encontrado.'});
+      return portalSendFile(res,row);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/payment-proofs'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      try{
+        const out=await portalProofCreate(ps,await portalReadJsonLarge(req));
+        return json(res,200,{ok:true,...out,operations:await portalOperations(ps)});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/web/client-portal/operations'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para atender o Portal do Cliente.'});
+      const leadId=url.searchParams.get('leadId')?validId(url.searchParams.get('leadId'),180):'';
+      return json(res,200,await portalAdminOperations(leadId));
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/client-portal/tickets'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para atualizar chamados.'});
+      try{
+        await portalTicketAdminPatch(await readBody(req),ss.username);
+        return json(res,200,{ok:true,operations:await portalAdminOperations('')});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/client-portal/files/upload'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para enviar arquivos ao cliente.'});
+      try{
+        const body=await portalReadJsonLarge(req),leadId=validId(body.leadId,180),upload=portalParseUpload(body);
+        if(!leadId)return json(res,400,{ok:false,error:'Cliente invalido.'});
+        const lead=await one(pool,"SELECT entity_id FROM entities WHERE entity_type='lead' AND entity_id=$1 AND deleted=FALSE",[leadId]);
+        if(!lead)return json(res,404,{ok:false,error:'Cliente nao encontrado.'});
+        const ticketId=body.ticketId?validId(body.ticketId,180):null;
+        if(ticketId){
+          const ticket=await one(pool,'SELECT ticket_id FROM portal_tickets WHERE ticket_id=$1 AND lead_id=$2',[ticketId,leadId]);
+          if(!ticket)return json(res,404,{ok:false,error:'Chamado nao encontrado para este cliente.'});
+        }
+        const stored=await portalStoreFile({leadId,ticketId,category:body.category||'Arquivo',visibility:'Cliente',upload,authorType:'Equipe',authorId:ss.username,authorName:ss.username});
+        return json(res,200,{ok:true,...stored,operations:await portalAdminOperations('')});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='GET'&&url.pathname.startsWith('/api/web/client-portal/files/')&&url.pathname.endsWith('/download')){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para baixar arquivos do Portal.'});
+      const parts=url.pathname.split('/'),fileId=validId(parts[5],180);
+      if(!fileId)return json(res,400,{ok:false,error:'Arquivo invalido.'});
+      const row=await portalFileRow(fileId);
+      if(!row)return json(res,404,{ok:false,error:'Arquivo nao encontrado.'});
+      return portalSendFile(res,row);
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/client-portal/payment-proofs'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para conferir comprovantes.'});
+      try{
+        await portalProofAdminPatch(await readBody(req),ss.username);
+        return json(res,200,{ok:true,operations:await portalAdminOperations('')});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }

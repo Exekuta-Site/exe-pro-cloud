@@ -1,0 +1,16 @@
+/* Estilos isolados, aplicados apenas com o pop-up ativo. */
+.exe-pro-popup-root[hidden]{display:none!important}
+.exe-pro-popup-root{position:fixed;inset:0;z-index:2147483000;display:flex;justify-content:center;align-items:center;padding:18px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-sizing:border-box}
+.exe-pro-popup-root *{box-sizing:border-box}
+.exe-pro-popup-overlay{position:absolute;inset:0;background:rgba(11,18,29,.72);backdrop-filter:blur(5px)}
+.exe-pro-popup-dialog{position:relative;width:min(520px,100%);max-height:min(86vh,850px);overflow:auto;background:#fff;color:#192230;border-radius:22px;border-top:5px solid var(--exe-pro-popup-accent,#18b7a4);padding:38px 35px 34px;box-shadow:0 28px 95px rgba(0,0,0,.27);outline:none;animation:exe-pro-popup-enter .25s ease-out}
+.exe-pro-popup-close{position:absolute;right:15px;top:12px;width:38px;height:38px;display:grid;place-items:center;border:0;border-radius:50%;background:#edf0f3;color:#253041;font-size:26px;line-height:1;cursor:pointer}
+.exe-pro-popup-close:hover,.exe-pro-popup-close:focus-visible{background:#e0e7eb;outline:2px solid var(--exe-pro-popup-accent,#18b7a4);outline-offset:2px}
+.exe-pro-popup-kicker{color:var(--exe-pro-popup-accent,#18b7a4);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:.13em;margin-bottom:11px}
+.exe-pro-popup-dialog h2{font:800 clamp(24px,4vw,34px)/1.15 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 38px 15px 0;letter-spacing:-.03em;color:#15202e}
+.exe-pro-popup-dialog p{font:400 16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#455063;margin:0 0 23px;overflow-wrap:anywhere}
+.exe-pro-popup-action{display:inline-flex;justify-content:center;align-items:center;min-height:45px;padding:11px 20px;border-radius:11px;background:var(--exe-pro-popup-accent,#18b7a4);color:#071818!important;text-decoration:none!important;font-weight:800;font-size:14px}
+.exe-pro-popup-action:hover,.exe-pro-popup-action:focus-visible{filter:brightness(.92);outline:2px solid #15202e;outline-offset:3px}
+@keyframes exe-pro-popup-enter{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:600px){.exe-pro-popup-dialog{padding:31px 22px 26px;border-radius:17px}}
+@media(prefers-reduced-motion:reduce){.exe-pro-popup-dialog{animation:none}.exe-pro-popup-overlay{backdrop-filter:none}}

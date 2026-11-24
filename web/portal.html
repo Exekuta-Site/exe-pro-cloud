@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0a0a">
+<title>Portal do Cliente — EXE PRO</title>
+<style>
+:root{--accent:#18b7a4;--bg:#090a0c;--panel:#111318;--panel2:#171a20;--line:#292d35;--text:#f7f8fa;--muted:#969daa;--danger:#ff7b86;--warn:#f2bd63;--ok:#57d6a0}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}
+a{color:var(--accent)}.hidden{display:none!important}
+#loginView{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 35%),linear-gradient(150deg,#07080a,#101319 60%,#090a0d)}
+.login-card{width:min(440px,100%);background:rgba(17,19,24,.92);border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.45);backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.brand-mark{width:44px;height:44px;border-radius:13px;background:var(--accent);color:#06110f;display:grid;place-items:center;font-weight:1000;letter-spacing:-.05em}.brand-copy b{display:block;font-size:17px}.brand-copy span{font-size:11px;color:var(--muted)}
+.eyebrow{font-size:9px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}h1{font-size:28px;line-height:1.05;margin:7px 0 8px}p{color:var(--muted);line-height:1.55}.field{margin-top:13px}.field label{display:block;font-size:9px;font-weight:900;letter-spacing:.08em;color:#b3bac4;margin-bottom:6px}.input{width:100%;border:1px solid var(--line);background:#0c0e12;color:var(--text);border-radius:11px;padding:12px 13px;outline:none}.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent)}
+.btn{border:1px solid var(--line);background:#15181e;color:var(--text);border-radius:10px;padding:10px 13px;font-weight:850;font-size:11px}.btn:hover{border-color:#454b56}.btn.primary{background:var(--accent);color:#07110f;border-color:var(--accent)}.btn.full{width:100%;margin-top:16px;padding:13px}
+.error{margin-top:12px;color:#ffc0c5;background:#221316;border:1px solid #663039;padding:10px 12px;border-radius:10px;font-size:11px}
+#appView{min-height:100vh}.topbar{height:68px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;background:rgba(9,10,12,.92);backdrop-filter:blur(14px);z-index:20}.topbar-left{display:flex;align-items:center;gap:18px}.topbar .brand{margin:0}.client-chip{padding:7px 10px;border:1px solid var(--line);border-radius:999px;font-size:10px;color:#c7ccd4;background:#101217}.topbar-right{display:flex;align-items:center;gap:8px}
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:calc(100vh - 68px)}.sidebar{border-right:1px solid var(--line);padding:18px 12px;background:#0b0d10}.navbtn{width:100%;border:0;background:transparent;color:#a9b0ba;padding:11px 12px;border-radius:10px;text-align:left;font-weight:850;font-size:11px;margin-bottom:4px}.navbtn:hover,.navbtn.active{background:#171a20;color:#fff}.navbtn.active{box-shadow:inset 3px 0 0 var(--accent)}.sidebar-foot{margin-top:24px;padding:12px;color:var(--muted);font-size:10px;line-height:1.5}
+.main{padding:24px;max-width:1500px;width:100%;margin:0 auto}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:20px}.hero h2{font-size:27px;margin:4px 0 6px}.hero p{margin:0}.status{display:inline-flex;align-items:center;padding:5px 8px;border:1px solid var(--line);border-radius:999px;font-size:9px;font-weight:900;background:#13161b}.status.ok{color:var(--ok);border-color:#265b47}.status.warn{color:var(--warn);border-color:#625126}.status.bad{color:var(--danger);border-color:#67333a}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.kpi{background:linear-gradient(180deg,#15181e,#101217);border:1px solid var(--line);border-radius:15px;padding:16px}.kpi span{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:var(--muted)}.kpi b{display:block;font-size:24px;margin-top:8px}.kpi small{color:#7f8793}
+.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:14px}.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.card h3{font-size:15px;margin:0}.muted{color:var(--muted)}.tiny{font-size:9px}.section-title{font-size:19px;margin:0 0 15px}.rows{display:flex;flex-direction:column}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}.row:first-child{border-top:0}.row-main b{font-size:12px}.row-main div{font-size:10px;color:var(--muted);margin-top:4px}.row-side{text-align:right}.row-side b{font-size:12px}.row-side div{font-size:9px;color:var(--muted);margin-top:4px}
+.service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.service-card,.project-card,.site-card{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:14px}.service-card h4,.project-card h4,.site-card h4{margin:0 0 5px;font-size:13px}.service-price{font-size:18px;font-weight:950;margin-top:12px}.site-link{font-size:10px;overflow-wrap:anywhere}.progress{height:8px;border-radius:999px;background:#292d35;overflow:hidden;margin:12px 0 5px}.progress>span{display:block;height:100%;background:var(--accent);border-radius:999px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:11px;border-bottom:1px solid var(--line)}.table td{padding:12px 11px;border-bottom:1px solid #22262d;font-size:11px}.table tr:last-child td{border-bottom:0}.amount{font-weight:900}.overdue{color:var(--danger)}.empty{padding:32px;text-align:center;color:var(--muted)}
+.support{display:flex;gap:8px;flex-wrap:wrap}.support a{text-decoration:none}
+@media(max-width:1050px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.topbar{padding:0 14px}.client-chip{display:none}.shell{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:5px;overflow:auto;padding:8px}.sidebar-foot{display:none}.navbtn{width:auto;white-space:nowrap;margin:0}.main{padding:16px}.hero{align-items:flex-start;flex-direction:column}.service-grid{grid-template-columns:1fr}}
+</style>
+<style id="portalClientOps381Style">
+/* EXE PRO 4.4.0 — Portal Operacional */
+.op381-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:#07110f;font-size:8px;font-weight:950;margin-left:6px}
+.op381-dashboard{margin-top:14px}
+.op381-mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.op381-mini-grid>div{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.op381-mini-grid span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.op381-mini-grid b{display:block;font-size:19px;margin-top:6px}.op381-mini-grid .op381-date{font-size:12px}
+.op381-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.op381-ticket-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.op381-ticket{margin:0}.op381-ticket p{font-size:11px}.op381-ticket-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.op381-file-note{margin-bottom:14px}.op381-file .btn{text-decoration:none;display:inline-flex}
+.op381-proof-card{margin-top:14px}
+.op381-timeline{padding:8px 18px}.op381-event{position:relative;display:grid;grid-template-columns:16px minmax(0,1fr);gap:10px;padding:13px 0;border-top:1px solid var(--line)}
+.op381-event:first-child{border-top:0}.op381-event b{font-size:12px}.op381-event p{margin:4px 0 0;font-size:10px}.op381-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 13%,transparent);margin-top:4px}
+.op381-modal-back{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:18px;backdrop-filter:blur(5px)}
+.op381-modal{position:relative;width:min(650px,100%);max-height:90vh;overflow:auto;background:#111318;border:1px solid #313640;border-radius:18px;padding:20px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.op381-modal.large{width:min(820px,100%)}.op381-modal h3{margin:6px 0 12px;font-size:20px}.op381-x{position:absolute;right:12px;top:12px;width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#171a20;color:#fff;font-size:19px}
+.op381-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.op381-form-grid .wide{grid-column:1/-1}
+.op381-modal textarea,.op381-modal select{width:100%;border:1px solid var(--line);background:#0c0e12;color:var(--text);border-radius:11px;padding:11px 12px;outline:none}
+.op381-modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.op381-conversation{display:flex;flex-direction:column;gap:8px;max-height:350px;overflow:auto;padding:8px 2px 12px}
+.op381-msg{max-width:84%;padding:10px 12px;border-radius:12px;background:#181b21;border:1px solid #2c313a}.op381-msg.client{align-self:flex-end;background:color-mix(in srgb,var(--accent) 12%,#16191e);border-color:color-mix(in srgb,var(--accent) 32%,#30343b)}.op381-msg.team{align-self:flex-start}
+.op381-msg p{margin:4px 0 0;font-size:11px;white-space:pre-wrap}
+.op381-attachments{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 12px}.op381-attach{font-size:9px;text-decoration:none;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#15181e}
+@media(max-width:900px){.op381-ticket-list{grid-template-columns:1fr}.op381-mini-grid,.op381-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.op381-form-grid{grid-template-columns:1fr}.op381-form-grid .wide{grid-column:1}.op381-ticket-foot{align-items:flex-start;flex-direction:column}.op381-mini-grid{grid-template-columns:1fr 1fr}.op381-msg{max-width:95%}}
+</style><style id="seoPortal382Style">
+/* EXE PRO 4.4.0 — Relatórios SEO no Portal */
+.seo382p-dashboard{margin-top:14px}
+.seo382p-mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.seo382p-mini>div,.seo382p-card-metrics>div,.seo382p-speed>div,.seo382p-local>div{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.seo382p-mini span,.seo382p-card-metrics span,.seo382p-speed span,.seo382p-local span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
+.seo382p-mini b,.seo382p-card-metrics b,.seo382p-speed b,.seo382p-local b{display:block;font-size:18px;margin-top:5px}
+.seo382p-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seo382p-card{display:flex;flex-direction:column;gap:12px}
+.seo382p-card-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.seo382p-card .btn{margin-top:auto}
+.seo382p-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.seo382p-speed{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.seo382p-speed small{display:block;margin-top:3px;color:var(--muted)}
+.seo382p-list{margin:10px 0 0;padding-left:18px}.seo382p-list li{margin:7px 0;font-size:11px;line-height:1.45}
+.seo382p-table{min-width:900px}.seo382p-up{color:var(--ok);font-weight:900}
+.seo382p-local{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+@media(max-width:1050px){.seo382p-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.seo382p-mini,.seo382p-kpis,.seo382p-local{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.seo382p-grid{grid-template-columns:1fr}.seo382p-mini,.seo382p-kpis,.seo382p-local{grid-template-columns:1fr 1fr}.seo382p-report-head{align-items:flex-start}}
+@media print{
+  body{background:#fff!important;color:#111!important}
+  .topbar,.sidebar,.seo382p-report-head .support{display:none!important}
+  .shell{display:block!important}.main{padding:0!important;max-width:none!important}
+  .card,.kpi,.table-wrap,.seo382p-mini>div,.seo382p-speed>div,.seo382p-local>div{background:#fff!important;color:#111!important;border-color:#ccc!important;box-shadow:none!important}
+  .muted,.tiny,.kpi span,.kpi small,.seo382p-speed small{color:#555!important}
+  .seo382p-print{padding:8mm}
+  .seo382p-print .card,.seo382p-print .kpi{break-inside:avoid}
+  .table{color:#111!important}.table th,.table td{border-color:#ddd!important}
+  .eyebrow{color:#333!important}
+}
+</style><style id="portalClientDocs383Style">
+/* EXE PRO 4.4.0 — Propostas e Contratos no Portal */
+.pd383-dashboard{margin-top:14px}
+.pd383-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pd383-mini-grid>div{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.pd383-mini-grid span,.pd383-value span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.pd383-mini-grid b{display:block;font-size:19px;margin-top:5px}
+.pd383-legal{margin-bottom:14px}
+.pd383-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pd383-card{display:flex;flex-direction:column}.pd383-card .btn{margin-top:auto}
+.pd383-value{padding:12px 0 15px}.pd383-value b{display:block;font-size:21px;margin-top:5px}
+.pd383-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pd383-items{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.pd383-items>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.pd383-items b{font-size:11px}.pd383-items span{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.pd383-item-side{text-align:right;font-size:9px;color:var(--muted)}.pd383-item-side b{color:var(--text)}
+.pd383-services{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pd383-services span{padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);font-size:9px;font-weight:800}
+.pd383-decision{border-color:color-mix(in srgb,var(--accent) 28%,var(--line))}
+.pd383-action{border-color:#65542a;background:linear-gradient(180deg,#18160f,#111318)}
+.pd383-check{display:flex;align-items:flex-start;gap:9px;padding:11px;border:1px solid var(--line);border-radius:11px;background:#101217;margin:10px 0;font-size:10px;line-height:1.45}
+.pd383-check input{margin-top:2px;width:16px;height:16px;accent-color:var(--accent)}
+@media(max-width:900px){.pd383-grid{grid-template-columns:1fr}.pd383-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.pd383-mini-grid{grid-template-columns:1fr}.pd383-items>div{grid-template-columns:1fr}.pd383-item-side{text-align:left}}
+@media print{
+  body{background:#fff!important;color:#111!important}.topbar,.sidebar,.pd383-print .support,.pd383-action{display:none!important}.shell{display:block!important}.main{padding:0!important;max-width:none!important}.pd383-print{padding:8mm}.card,.kpi,.pd383-items>div{background:#fff!important;color:#111!important;border-color:#ccc!important;box-shadow:none!important}.muted,.tiny,.kpi span,.kpi small{color:#555!important}
+}
+</style><style id="portalBilling384Style">
+/* EXE PRO 4.4.0 — Financeiro Recorrente no Portal */
+.pb384-dash{margin-top:14px}
+.pb384-mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pb384-mini>div,.pb384-invoice-kpis>div{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.pb384-mini span,.pb384-invoice-kpis span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.pb384-mini b,.pb384-invoice-kpis b{display:block;font-size:18px;margin-top:5px}
+.pb384-main{margin-top:14px}
+.pb384-invoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pb384-invoice{margin:0}
+.pb384-invoice-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.pb384-invoice-kpis b{font-size:14px}
+.pb384-overdue,.pb384-discount{margin:10px 0}
+.pb384-items,.pb384-payments{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+@media(max-width:1050px){.pb384-invoices{grid-template-columns:1fr}.pb384-mini,.pb384-invoice-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.pb384-mini,.pb384-invoice-kpis{grid-template-columns:1fr 1fr}}
+</style><style id="portalTasks391Style">
+/* EXE PRO 4.4.0 — Acompanhamento de Tarefas no Portal */
+.pt391-dashboard{margin-top:14px}
+.pt391-mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pt391-mini>div,.pt391-facts>div{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.pt391-mini span,.pt391-facts span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
+.pt391-mini b,.pt391-facts b{display:block;font-size:18px;margin-top:5px}
+.pt391-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pt391-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pt391-card{margin:0;display:flex;flex-direction:column}
+.pt391-card p{font-size:10px;line-height:1.5}
+.pt391-card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+.pt391-checklist{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:7px}
+.pt391-checklist>div:not(.eyebrow){display:flex;align-items:center;gap:8px;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+.pt391-checklist span{font-size:13px}.pt391-checklist b{font-size:9px}.pt391-checklist .done b{text-decoration:line-through;color:var(--muted)}
+.pt391-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.pt391-comments{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;margin-bottom:12px}
+.pt391-comment{max-width:86%;padding:10px 11px;border-radius:11px;border:1px solid var(--line);background:var(--panel2)}
+.pt391-comment.team{align-self:flex-start}.pt391-comment.client{align-self:flex-end;background:color-mix(in srgb,var(--accent) 10%,var(--panel2));border-color:color-mix(in srgb,var(--accent) 30%,var(--line))}
+.pt391-comment p{margin:4px 0 0;font-size:10px;white-space:pre-wrap;line-height:1.45}
+@media(max-width:950px){.pt391-grid{grid-template-columns:1fr}.pt391-mini,.pt391-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.pt391-mini,.pt391-kpis,.pt391-facts{grid-template-columns:1fr 1fr}.pt391-comment{max-width:96%}}
+</style><style id="pp452Style">.pp452-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}.pp452-lead{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel2);display:flex;flex-direction:column}.pp452-photo-wrap{position:relative;height:150px;background:#0b0d11}.pp452-photo{width:100%;height:100%;object-fit:cover;display:block}.pp452-photo-empty{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,#151922,#0e1116)}.pp452-photo-empty span{font-size:30px;font-weight:900;color:color-mix(in srgb,var(--accent) 65%,#5b6472);letter-spacing:-.04em}.pp452-lead-body{padding:13px 14px 14px;display:flex;flex-direction:column;gap:7px;flex:1}.pp452-lead-body h4{margin:0;font-size:14px;line-height:1.3}.pp452-addr{margin:0;font-size:11.5px;color:var(--muted);line-height:1.45}.pp452-tags{display:flex;gap:6px;flex-wrap:wrap}.pp452-tag{font-size:9.5px;font-weight:800;letter-spacing:.04em;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:3px 9px;background:var(--panel)}.pp452-tag-star{color:#f2bd63;border-color:rgba(242,189,99,.35)}.pp452-tag-hot{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 9%,var(--panel))}.pp452-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:4px}.pp452-card{border:1px solid var(--line);border-radius:14px;padding:15px;background:var(--panel2)}.pp452-card h4{margin:2px 0 6px;font-size:14px}.pp452-card p{margin:0 0 4px;font-size:12px;color:var(--muted);line-height:1.45}.pp452-card .pp452-src{font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}.pp452-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pp452-msg{padding:10px 13px;border-radius:11px;border:1px solid var(--line);background:var(--panel);font-size:12px;margin-top:12px}.pp452-msg.ok{border-color:rgba(87,214,160,.4);color:var(--ok)}.pp452-msg.warn{border-color:rgba(242,189,99,.4);color:var(--warn)}.pp452-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}.pp452-form .pp452-wide{grid-column:1/-1}@media(max-width:760px){.pp452-grid,.pp452-form{grid-template-columns:1fr}}</style></head>
+<body>
+<section id="loginView">
+  <div class="login-card">
+    <div class="brand"><div class="brand-mark">EX</div><div class="brand-copy"><b id="loginBrand">Portal do Cliente</b><span>Área segura EXE PRO</span></div></div>
+    <div class="eyebrow">ACESSO DO CLIENTE</div>
+    <h1>Bem-vindo</h1>
+    <p>Acompanhe seus serviços, sites, cobranças e projetos em um único lugar.</p>
+    <form id="loginForm">
+      <div class="field"><label>USUÁRIO / E-MAIL</label><input id="loginUser" class="input" autocomplete="username" required></div>
+      <div class="field"><label>SENHA</label><input id="loginPass" class="input" type="password" autocomplete="current-password" required></div>
+      <button class="btn primary full" type="submit">Entrar no portal</button>
+      <div id="loginError" class="error hidden"></div>
+    </form>
+  </div>
+</section>
+
+<section id="appView" class="hidden">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand"><div class="brand-mark">EX</div><div class="brand-copy"><b id="brandName">Portal do Cliente</b><span id="brandSub">EXE PRO</span></div></div>
+      <span id="clientChip" class="client-chip"></span>
+    </div>
+    <div class="topbar-right"><span id="userChip" class="client-chip"></span><button id="logoutBtn" class="btn">Sair</button></div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar">
+      <button class="navbtn active" data-page="dashboard">Visão geral</button>
+      <button class="navbtn" data-page="services">Serviços e sites</button>
+      <button class="navbtn" data-page="finance" id="financeNav">Financeiro</button>
+      <button class="navbtn" data-page="projects" id="projectsNav">Projetos</button>
+      <div class="sidebar-foot">Portal exclusivo do cliente. Informações administrativas internas do EXE PRO não são exibidas aqui.</div>
+    </aside>
+    <main id="main" class="main"></main>
+  </div>
+</section>
+
+<script>
+const P={csrf:'',data:null,page:'dashboard'};
+const $=id=>document.getElementById(id);
+function e(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function date(v){if(!v)return'—';const s=String(v).slice(0,10),p=s.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s}
+function roleLabel(v){return({Proprietario:'Proprietário',Financeiro:'Financeiro',Marketing:'Marketing',Visualizador:'Visualizador'})[v]||v}
+async function api(url,opt={}){
+  const o={credentials:'same-origin',headers:{'content-type':'application/json',...(opt.headers||{})},...opt};
+  if(P.csrf&&o.method&&o.method!=='GET')o.headers['x-csrf-token']=P.csrf;
+  const r=await fetch(url,o);let j={};try{j=await r.json()}catch{}
+  if(!r.ok)throw new Error(j.error||'Falha na comunicação.');
+  return j;
+}
+function applyBrand(){
+  const b=P.data?.branding||{};
+  if(/^#[0-9a-f]{6}$/i.test(b.accent||''))document.documentElement.style.setProperty('--accent',b.accent);
+  $('brandName').textContent=b.name||'Portal do Cliente';$('loginBrand').textContent=b.name||'Portal do Cliente';
+}
+function nav(){
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===P.page));
+  $('financeNav').classList.toggle('hidden',!P.data?.permissions?.finance);
+  $('projectsNav').classList.toggle('hidden',!P.data?.permissions?.projects);
+}
+function statusBadge(v){
+  const s=String(v||'');let cls=/ativo|online|pago|conclu/i.test(s)?'ok':/atras|susp|erro|cancel/i.test(s)?'bad':'warn';
+  return'<span class="status '+cls+'">'+e(s||'—')+'</span>';
+}
+function support(){
+  const b=P.data.branding||{},arr=[];
+  if(b.supportWhatsapp){const d=String(b.supportWhatsapp).replace(/\D+/g,'');arr.push('<a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+e(d)+'">WhatsApp</a>')}
+  if(b.supportEmail)arr.push('<a class="btn" href="mailto:'+e(b.supportEmail)+'">E-mail</a>');
+  return arr.length?'<div class="support">'+arr.join('')+'</div>':'<span class="muted tiny">Contato de suporte não informado.</span>';
+}
+function dashboard(){
+  const d=P.data,c=d.client,s=d.summary;
+  return'<div class="hero"><div><div class="eyebrow">PORTAL DO CLIENTE</div><h2>Olá, '+e(c.name)+'</h2><p>Veja um resumo dos seus serviços e da operação atual.</p></div>'+statusBadge(c.status)+'</div>'+
+    '<div class="kpis">'+
+      '<div class="kpi"><span>Serviços ativos</span><b>'+e(s.services)+'</b><small>contratados</small></div>'+
+      '<div class="kpi"><span>Sites</span><b>'+e(s.sites)+'</b><small>monitorados</small></div>'+
+      '<div class="kpi"><span>'+(d.permissions.finance?'Mensalidade':'Projetos')+'</span><b>'+(d.permissions.finance?money(s.monthly):e(s.projects))+'</b><small>'+(d.permissions.finance?'serviços mensais':'em acompanhamento')+'</small></div>'+
+      '<div class="kpi"><span>'+(d.permissions.finance?'Próximo vencimento':'Status')+'</span><b>'+(d.permissions.finance?date(s.nextDue):e(c.status))+'</b><small>'+(d.permissions.finance?(s.nextAmount!=null?money(s.nextAmount):'sem cobrança'):'situação da conta')+'</small></div>'+
+    '</div>'+
+    '<div class="grid2">'+
+      '<div class="card"><div class="card-head"><div><div class="eyebrow">SERVIÇOS</div><h3>Carteira atual</h3></div><button class="btn" onclick="go(\'services\')">Ver tudo</button></div>'+servicesMini()+'</div>'+
+      '<div class="card"><div class="card-head"><div><div class="eyebrow">SUPORTE</div><h3>Fale com a equipe</h3></div></div><p>Precisa falar sobre um serviço, site ou cobrança?</p>'+support()+'</div>'+
+    '</div>'+
+    (d.permissions.finance?'<div class="card"><div class="card-head"><div><div class="eyebrow">FINANCEIRO</div><h3>Situação financeira</h3></div><button class="btn" onclick="go(\'finance\')">Abrir financeiro</button></div><div class="kpis" style="margin-bottom:0"><div class="kpi"><span>Em aberto</span><b>'+money(s.pending)+'</b></div><div class="kpi"><span>Em atraso</span><b class="'+(s.overdue>0?'overdue':'')+'">'+money(s.overdue)+'</b></div></div></div>':'');
+}
+function servicesMini(){
+  const a=(P.data.services||[]).filter(x=>x.status==='Ativo').slice(0,4);
+  if(!a.length)return'<div class="empty">Nenhum serviço ativo cadastrado.</div>';
+  return'<div class="rows">'+a.map(x=>'<div class="row"><div class="row-main"><b>'+e(x.name)+'</b><div>'+e(x.siteUrl||'Serviço geral')+'</div></div><div class="row-side"><b>'+(x.price==null?'—':money(x.price))+'</b><div>'+e(x.billingCycle)+'</div></div></div>').join('')+'</div>';
+}
+function servicesPage(){
+  const sv=P.data.services||[],sites=P.data.sites||[];
+  return'<div class="hero"><div><div class="eyebrow">SERVIÇOS E SITES</div><h2>Sua estrutura contratada</h2><p>Serviços, valores, periodicidade e sites vinculados.</p></div></div>'+
+    '<h3 class="section-title">Serviços</h3>'+
+    (sv.length?'<div class="service-grid">'+sv.map(x=>'<article class="service-card"><div class="card-head"><div><h4>'+e(x.name)+'</h4><div class="tiny muted">'+e(x.siteUrl||'Serviço geral')+'</div></div>'+statusBadge(x.status)+'</div><div class="service-price">'+(x.price==null?'Valor reservado':money(x.price))+'</div><div class="tiny muted">'+e(x.billingCycle)+' · vencimento dia '+e(x.billingDay)+'</div></article>').join('')+'</div>':'<div class="card empty">Nenhum serviço cadastrado.</div>')+
+    '<h3 class="section-title" style="margin-top:22px">Sites</h3>'+
+    (sites.length?'<div class="service-grid">'+sites.map(x=>'<article class="site-card"><div class="card-head"><div><h4>'+e(x.label)+'</h4><a class="site-link" target="_blank" rel="noopener" href="'+e(x.siteUrl)+'">'+e(x.siteUrl)+'</a></div>'+statusBadge(x.status)+'</div><div class="tiny muted">Última verificação: '+date(x.lastCheckedAt)+'</div></article>').join('')+'</div>':'<div class="card empty">Nenhum site conectado ao portal.</div>');
+}
+function financePage(){
+  if(!P.data.permissions.finance)return dashboard();
+  const a=P.data.finance||[];
+  return'<div class="hero"><div><div class="eyebrow">FINANCEIRO</div><h2>Faturas e pagamentos</h2><p>Acompanhe cobranças abertas, vencidas e pagas.</p></div></div>'+
+    '<div class="kpis"><div class="kpi"><span>Em aberto</span><b>'+money(P.data.summary.pending)+'</b></div><div class="kpi"><span>Em atraso</span><b class="'+(P.data.summary.overdue>0?'overdue':'')+'">'+money(P.data.summary.overdue)+'</b></div><div class="kpi"><span>Próximo vencimento</span><b>'+date(P.data.summary.nextDue)+'</b><small>'+money(P.data.summary.nextAmount)+'</small></div><div class="kpi"><span>PIX</span><b style="font-size:13px;overflow-wrap:anywhere">'+e(P.data.branding?.pixKey||'Não informado')+'</b></div></div>'+
+    (a.length?'<div class="table-wrap"><table class="table"><thead><tr><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Pagamento</th><th>Status</th></tr></thead><tbody>'+a.map(x=>'<tr><td><b>'+e(x.description)+'</b></td><td class="'+(x.overdue?'overdue':'')+'">'+date(x.dueDate)+'</td><td class="amount">'+money(x.amount)+'</td><td>'+e(x.paymentMethod||'—')+'</td><td>'+statusBadge(x.overdue?'Atrasado':x.status)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="card empty">Nenhuma cobrança cadastrada.</div>');
+}
+function projectsPage(){
+  if(!P.data.permissions.projects)return dashboard();
+  const a=P.data.projects||[];
+  return'<div class="hero"><div><div class="eyebrow">PROJETOS</div><h2>Andamento dos projetos</h2><p>Acompanhe status, prazo e percentual concluído.</p></div></div>'+
+    (a.length?'<div class="service-grid">'+a.map(x=>'<article class="project-card"><div class="card-head"><div><h4>'+e(x.title)+'</h4><div class="tiny muted">'+e(x.deadline?'Prazo: '+date(x.deadline):'Sem prazo definido')+'</div></div>'+statusBadge(x.status)+'</div><p class="tiny">'+e(x.summary||'Sem atualização pública registrada.')+'</p><div class="progress"><span style="width:'+Math.max(0,Math.min(100,x.progress||0))+'%"></span></div><div class="tiny muted">'+e(x.progress||0)+'% concluído</div></article>').join('')+'</div>':'<div class="card empty">Nenhum projeto em acompanhamento.</div>');
+}
+function render(){
+  if(!P.data)return;
+  nav();
+  $('clientChip').textContent=P.data.client.name;
+  $('userChip').textContent=P.data.user.username+' · '+roleLabel(P.data.user.role);
+  $('main').innerHTML=P.page==='services'?servicesPage():P.page==='finance'?financePage():P.page==='projects'?projectsPage():dashboard();
+}
+function go(page){P.page=page;render()}window.go=go;
+async function load(){
+  try{
+    const s=await api('/api/portal/session');P.csrf=s.csrf;
+    P.data=await api('/api/portal/dashboard');P.csrf=P.data.csrf||P.csrf;applyBrand();
+    $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');render();
+  }catch{$('loginView').classList.remove('hidden');$('appView').classList.add('hidden')}
+}
+$('loginForm').addEventListener('submit',async ev=>{
+  ev.preventDefault();const err=$('loginError');err.classList.add('hidden');
+  try{
+    const j=await api('/api/portal/login',{method:'POST',body:JSON.stringify({username:$('loginUser').value,password:$('loginPass').value})});
+    P.csrf=j.csrf;await load();
+  }catch(e){err.textContent=e.message;err.classList.remove('hidden')}
+});
+$('logoutBtn').addEventListener('click',async()=>{try{await api('/api/portal/logout',{method:'POST',body:'{}'})}catch{}P.data=null;P.csrf='';$('appView').classList.add('hidden');$('loginView').classList.remove('hidden');$('loginPass').value=''});
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+load();
+</script>
+<script id="portalClientOps381Script">'use strict';
+(function(){
+  const OP381={loading:false};
+  const baseRender381=render;
+  const baseDashboard381=dashboard;
+  const baseFinance381=financePage;
+
+  function bytes381(n){n=Number(n||0);if(n<1024)return n+' B';if(n<1048576)return(n/1024).toFixed(1)+' KB';return(n/1048576).toFixed(1)+' MB'}
+  function typeLabel381(t){return({Chamado:'Chamado',Arquivo:'Arquivo',Projeto:'Projeto',Financeiro:'Financeiro',Comprovante:'Comprovante'})[t]||t}
+  function ticketStatus381(s){return statusBadge(s)}
+  function safeDownload381(id){return'/api/portal/files/'+encodeURIComponent(id)+'/download'}
+  function categoryLabel381(v){return v==='Conteudo'?'Conteúdo':v}
+
+  async function loadOps381(force=false){
+    if(OP381.loading)return P.ops;
+    if(P.ops&&!force)return P.ops;
+    OP381.loading=true;
+    try{P.ops=await api('/api/portal/operations');P.csrf=P.ops.csrf||P.csrf;updateOpsBadges381();return P.ops}
+    catch(e){console.error(e);return null}
+    finally{OP381.loading=false}
+  }
+  window.loadOps381=loadOps381;
+
+  function ensureNav381(){
+    const side=document.querySelector('.sidebar');if(!side||document.getElementById('ticketsNav381'))return;
+    const foot=side.querySelector('.sidebar-foot');
+    const html='<button class="navbtn" data-page="tickets" id="ticketsNav381" onclick="goOps381(\'tickets\')">Chamados <span id="ticketBadge381" class="op381-badge hidden"></span></button>'+
+      '<button class="navbtn" data-page="files" id="filesNav381" onclick="goOps381(\'files\')">Arquivos</button>'+
+      '<button class="navbtn" data-page="timeline" id="timelineNav381" onclick="goOps381(\'timeline\')">Linha do tempo</button>';
+    if(foot)foot.insertAdjacentHTML('beforebegin',html);else side.insertAdjacentHTML('beforeend',html);
+  }
+  function updateOpsBadges381(){
+    const b=document.getElementById('ticketBadge381'),n=Number(P.ops?.counts?.openTickets||0);
+    if(b){b.textContent=n;b.classList.toggle('hidden',!n)}
+  }
+  window.goOps381=async function(page){
+    ensureNav381();
+    P.page=page;
+    await loadOps381(false);
+    render();
+  };
+
+  dashboard=function(){
+    let h=baseDashboard381();
+    if(!P.ops)setTimeout(()=>loadOps381(false).then(()=>{if(P.page==='dashboard')render()}),0);
+    const o=P.ops;
+    if(!o)return h;
+    h+='<div class="card op381-dashboard"><div class="card-head"><div><div class="eyebrow">ATENDIMENTO</div><h3>Portal operacional</h3></div><button class="btn" onclick="goOps381(\'tickets\')">Abrir chamados</button></div>'+
+      '<div class="op381-mini-grid"><div><span>Chamados abertos</span><b>'+e(o.counts?.openTickets||0)+'</b></div><div><span>Arquivos compartilhados</span><b>'+e(o.counts?.files||0)+'</b></div>'+
+      (P.data.permissions.finance?'<div><span>Comprovantes aguardando</span><b>'+e(o.counts?.pendingProofs||0)+'</b></div>':'')+
+      '<div><span>Última movimentação</span><b class="op381-date">'+e(o.timeline?.[0]?date(o.timeline[0].at):'—')+'</b></div></div></div>';
+    return h;
+  };
+
+  financePage=function(){
+    let h=baseFinance381();
+    if(!P.data.permissions.finance)return h;
+    if(!P.ops)setTimeout(()=>loadOps381(false).then(()=>{if(P.page==='finance')render()}),0);
+    const proofs=P.ops?.proofs||[];
+    const open=(P.data.finance||[]).filter(x=>!String(x.status||'').toLowerCase().includes('pago')&&!String(x.status||'').toLowerCase().includes('cancel'));
+    h+='<div class="card op381-proof-card"><div class="card-head"><div><div class="eyebrow">COMPROVANTES</div><h3>Comprovantes de pagamento</h3><p class="muted tiny">Envie um comprovante para conferência da equipe.</p></div>'+(open.length?'<button class="btn primary" onclick="openProof381()">+ Enviar comprovante</button>':'')+'</div>'+
+      (proofs.length?'<div class="rows">'+proofs.map(x=>'<div class="row"><div class="row-main"><b>'+e(x.filename)+'</b><div>'+e(x.receivable?.description||'Cobrança')+' · '+date(x.submittedAt)+'</div></div><div class="row-side">'+statusBadge(x.status)+'<div><a href="'+safeDownload381(x.fileId)+'">Baixar</a></div></div></div>').join('')+'</div>':'<div class="empty">Nenhum comprovante enviado.</div>')+
+    '</div>';
+    return h;
+  };
+
+  function ticketsPage381(){
+    const a=P.ops?.tickets||[];
+    return'<div class="hero"><div><div class="eyebrow">ATENDIMENTO</div><h2>Chamados</h2><p>Solicite alterações, suporte, SEO, conteúdo ou atendimento financeiro.</p></div><button class="btn primary" onclick="openTicketCreate381()">+ Novo chamado</button></div>'+
+      '<div class="kpis op381-kpis"><div class="kpi"><span>Abertos</span><b>'+e(P.ops?.counts?.openTickets||0)+'</b></div><div class="kpi"><span>Total</span><b>'+a.length+'</b></div><div class="kpi"><span>Arquivos</span><b>'+e(P.ops?.counts?.files||0)+'</b></div><div class="kpi"><span>Última atividade</span><b style="font-size:15px">'+e(P.ops?.timeline?.[0]?date(P.ops.timeline[0].at):'—')+'</b></div></div>'+
+      (a.length?'<div class="op381-ticket-list">'+a.map(t=>'<article class="card op381-ticket"><div class="card-head"><div><div class="eyebrow">'+e(categoryLabel381(t.category))+' · '+e(t.priority)+'</div><h3>'+e(t.subject)+'</h3><p class="muted tiny">Atualizado em '+date(t.updatedAt)+' · '+(t.messages?.length||0)+' mensagem(ns)</p></div>'+ticketStatus381(t.status)+'</div><p>'+e(t.description)+'</p><div class="op381-ticket-foot"><span class="tiny muted">'+(t.assignedTo?'Responsável: '+e(t.assignedTo):'Aguardando distribuição')+'</span><button class="btn" onclick="openTicket381(\''+e(t.ticketId)+'\')">Abrir conversa</button></div></article>').join('')+'</div>':'<div class="card empty">Você ainda não abriu nenhum chamado.</div>');
+  }
+
+  function filesPage381(){
+    const a=P.ops?.files||[];
+    return'<div class="hero"><div><div class="eyebrow">ARQUIVOS</div><h2>Arquivos compartilhados</h2><p>Contratos, relatórios, briefings, imagens e documentos trocados com a equipe.</p></div><button class="btn primary" onclick="openFileUpload381()">+ Enviar arquivo</button></div>'+
+      '<div class="notice op381-file-note">Arquivos permitidos: PDF, JPG, PNG, WEBP, TXT, ZIP, DOCX e XLSX. Limite de 8 MB por arquivo.</div>'+
+      (a.length?'<div class="service-grid">'+a.map(f=>'<article class="service-card op381-file"><div class="card-head"><div><h4>'+e(f.filename)+'</h4><div class="tiny muted">'+e(f.category)+' · '+bytes381(f.byteSize)+'</div></div><span class="status">'+date(f.createdAt)+'</span></div><div class="tiny muted">Enviado por '+e(f.uploadedByName||f.uploadedByType)+'</div><div style="margin-top:12px"><a class="btn" href="'+safeDownload381(f.fileId)+'">Baixar arquivo</a></div></article>').join('')+'</div>':'<div class="card empty">Nenhum arquivo compartilhado ainda.</div>');
+  }
+
+  function timelinePage381(){
+    const a=P.ops?.timeline||[];
+    return'<div class="hero"><div><div class="eyebrow">HISTÓRICO</div><h2>Linha do tempo</h2><p>Principais movimentações da sua conta em ordem cronológica.</p></div></div>'+
+      (a.length?'<div class="card op381-timeline">'+a.map(x=>'<div class="op381-event"><div class="op381-dot"></div><div><div class="tiny muted">'+e(typeLabel381(x.type))+' · '+date(x.at)+'</div><b>'+e(x.title)+'</b><p>'+e(x.detail||'')+'</p></div></div>').join('')+'</div>':'<div class="card empty">Nenhuma movimentação disponível.</div>');
+  }
+
+  render=function(){
+    ensureNav381();
+    if(['tickets','files','timeline'].includes(P.page)){
+      nav();
+      document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===P.page));
+      if(!P.ops&&!OP381.loading){setTimeout(()=>loadOps381(true).then(()=>render()),0);$('main').innerHTML='<div class="card empty">Carregando...</div>';return}
+      $('clientChip').textContent=P.data?.client?.name||'';
+      $('userChip').textContent=P.data?.user?.username+' · '+roleLabel(P.data?.user?.role);
+      $('main').innerHTML=P.page==='tickets'?ticketsPage381():P.page==='files'?filesPage381():timelinePage381();
+      updateOpsBadges381();return;
+    }
+    baseRender381();
+    updateOpsBadges381();
+  };
+
+  function ticket381(id){return P.ops?.tickets?.find(x=>x.ticketId===id)}
+  window.openTicketCreate381=function(){
+    $('main').insertAdjacentHTML('beforeend','<div id="opModal381" class="op381-modal-back"><div class="op381-modal"><button class="op381-x" onclick="closeOp381()">×</button><div class="eyebrow">NOVO CHAMADO</div><h3>Abrir solicitação</h3>'+
+      '<div class="op381-form-grid"><div class="field"><label>CATEGORIA</label><select id="op381_cat"><option>Site</option><option>SEO</option><option value="Conteudo">Conteúdo</option><option>Financeiro</option><option>Suporte</option><option>Outro</option></select></div><div class="field"><label>PRIORIDADE</label><select id="op381_pri"><option>Normal</option><option>Baixa</option><option>Alta</option><option>Urgente</option></select></div><div class="field wide"><label>ASSUNTO</label><input id="op381_sub" class="input" maxlength="180"></div><div class="field wide"><label>DESCRIÇÃO</label><textarea id="op381_desc" rows="6" maxlength="6000"></textarea></div></div>'+
+      '<div class="actions"><button class="btn" onclick="closeOp381()">Cancelar</button><button class="btn primary" onclick="saveTicket381()">Abrir chamado</button></div></div></div>');
+  };
+  window.saveTicket381=async function(){
+    try{
+      const j=await api('/api/portal/tickets',{method:'POST',body:JSON.stringify({category:$('op381_cat').value,priority:$('op381_pri').value,subject:$('op381_sub').value.trim(),description:$('op381_desc').value.trim()})});
+      P.ops=j.operations;closeOp381();render();
+    }catch(e){alert(e.message)}
+  };
+  window.openTicket381=function(id){
+    const t=ticket381(id);if(!t)return;
+    const msgs=(t.messages||[]).map(m=>'<div class="op381-msg '+(m.authorType==='Cliente'?'client':'team')+'"><div class="tiny muted">'+e(m.authorName||m.authorType)+' · '+date(m.createdAt)+'</div><p>'+e(m.body)+'</p></div>').join('');
+    const files=(t.files||[]).map(f=>'<a class="op381-attach" href="'+safeDownload381(f.fileId)+'">'+e(f.filename)+' · '+bytes381(f.byteSize)+'</a>').join('');
+    $('main').insertAdjacentHTML('beforeend','<div id="opModal381" class="op381-modal-back"><div class="op381-modal large"><button class="op381-x" onclick="closeOp381()">×</button><div class="eyebrow">'+e(categoryLabel381(t.category))+' · '+e(t.priority)+'</div><h3>'+e(t.subject)+'</h3><div style="margin:8px 0">'+statusBadge(t.status)+'</div><div class="op381-conversation">'+msgs+'</div>'+
+      (files?'<div class="op381-attachments">'+files+'</div>':'')+
+      '<div class="field"><label>NOVA MENSAGEM</label><textarea id="op381_reply" rows="4" maxlength="6000"></textarea></div>'+
+      '<div class="actions"><button class="btn" onclick="document.getElementById(\'ticketFile381\').click()">Anexar arquivo</button><input id="ticketFile381" type="file" class="hidden" onchange="uploadTicketFile381(\''+e(id)+'\',this)"><button class="btn primary" onclick="replyTicket381(\''+e(id)+'\')">Enviar mensagem</button></div></div></div>');
+  };
+  window.replyTicket381=async function(id){
+    const msg=$('op381_reply').value.trim();if(!msg)return;
+    try{const j=await api('/api/portal/tickets/message',{method:'POST',body:JSON.stringify({ticketId:id,message:msg})});P.ops=j.operations;closeOp381();openTicket381(id);updateOpsBadges381()}catch(e){alert(e.message)}
+  };
+  window.uploadTicketFile381=async function(id,input){
+    const f=input.files?.[0];if(!f)return;
+    try{await uploadFile381(f,{ticketId:id,category:'Chamado'});closeOp381();openTicket381(id)}catch(e){alert(e.message)}
+  };
+  window.openFileUpload381=function(){
+    $('main').insertAdjacentHTML('beforeend','<div id="opModal381" class="op381-modal-back"><div class="op381-modal"><button class="op381-x" onclick="closeOp381()">×</button><div class="eyebrow">ARQUIVOS</div><h3>Enviar arquivo</h3><div class="field"><label>CATEGORIA</label><select id="fileCat381"><option>Arquivo</option><option>Contrato</option><option>Relatório</option><option>Briefing</option><option>Imagem</option><option>Outro</option></select></div><div class="field"><label>ARQUIVO</label><input id="fileInput381" class="input" type="file"></div><div class="actions"><button class="btn" onclick="closeOp381()">Cancelar</button><button class="btn primary" onclick="sendFile381()">Enviar</button></div></div></div>');
+  };
+  window.sendFile381=async function(){
+    const f=$('fileInput381').files?.[0];if(!f)return alert('Selecione um arquivo.');
+    try{await uploadFile381(f,{category:$('fileCat381').value});closeOp381();render()}catch(e){alert(e.message)}
+  };
+  async function uploadFile381(file,extra={}){
+    if(file.size>8*1024*1024)throw new Error('O arquivo excede 8 MB.');
+    const base64=await readBase64381(file);
+    const j=await api('/api/portal/files/upload',{method:'POST',body:JSON.stringify({filename:file.name,mimeType:file.type||mimeGuess381(file.name),base64,...extra})});
+    P.ops=j.operations;return j;
+  }
+  function mimeGuess381(name){
+    const x=String(name).toLowerCase();
+    if(x.endsWith('.pdf'))return'application/pdf';if(/\.jpe?g$/.test(x))return'image/jpeg';if(x.endsWith('.png'))return'image/png';if(x.endsWith('.webp'))return'image/webp';if(x.endsWith('.txt'))return'text/plain';if(x.endsWith('.zip'))return'application/zip';if(x.endsWith('.docx'))return'application/vnd.openxmlformats-officedocument.wordprocessingml.document';if(x.endsWith('.xlsx'))return'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';return'application/octet-stream';
+  }
+  function readBase64381(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||'').split(',')[1]||'');r.onerror=reject;r.readAsDataURL(file)})}
+  window.openProof381=function(receivableId=''){
+    const open=(P.data.finance||[]).filter(x=>!String(x.status||'').toLowerCase().includes('pago')&&!String(x.status||'').toLowerCase().includes('cancel'));
+    $('main').insertAdjacentHTML('beforeend','<div id="opModal381" class="op381-modal-back"><div class="op381-modal"><button class="op381-x" onclick="closeOp381()">×</button><div class="eyebrow">FINANCEIRO</div><h3>Enviar comprovante</h3><div class="field"><label>COBRANÇA</label><select id="proofRec381">'+open.map(x=>'<option value="'+e(x.receivableId)+'" '+(x.receivableId===receivableId?'selected':'')+'>'+e(x.description)+' · '+money(x.amount)+' · '+date(x.dueDate)+'</option>').join('')+'</select></div><div class="field"><label>COMPROVANTE</label><input id="proofFile381" class="input" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp"></div><div class="field"><label>OBSERVAÇÃO</label><textarea id="proofNote381" rows="3"></textarea></div><div class="actions"><button class="btn" onclick="closeOp381()">Cancelar</button><button class="btn primary" onclick="sendProof381()">Enviar para conferência</button></div></div></div>');
+  };
+  window.sendProof381=async function(){
+    const f=$('proofFile381').files?.[0];if(!f)return alert('Selecione o comprovante.');
+    if(f.size>8*1024*1024)return alert('O arquivo excede 8 MB.');
+    try{
+      const base64=await readBase64381(f);
+      const j=await api('/api/portal/payment-proofs',{method:'POST',body:JSON.stringify({receivableId:$('proofRec381').value,filename:f.name,mimeType:f.type||mimeGuess381(f.name),base64,note:$('proofNote381').value.trim()})});
+      P.ops=j.operations;closeOp381();render();
+    }catch(e){alert(e.message)}
+  };
+  window.closeOp381=function(){document.getElementById('opModal381')?.remove()};
+
+  setTimeout(async()=>{ensureNav381();if(P.data){await loadOps381(false);if(P.page==='dashboard')render()}},700);
+})();
+</script><script id="seoPortal382Script">'use strict';
+(function(){
+  const SEO382P={loading:false};
+  const baseDashboard382=dashboard;
+  const baseRender382=render;
+
+  function e382p(v){return e(v)}
+  function fmt382p(v,d=0){return Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+  function pct382p(v){return fmt382p(v,2)+'%'}
+  function report382p(id){return (P.seoReports||[]).find(x=>x.reportId===id)||null}
+  function grade382p(v){v=Number(v||0);return v>=90?'Excelente':v>=75?'Bom':v>=50?'Atenção':'Crítico'}
+  function delta382p(k){
+    const a=Number(k.position),b=Number(k.previousPosition);
+    if(!Number.isFinite(a)||!Number.isFinite(b))return'—';
+    const d=b-a;if(Math.abs(d)<.05)return'0';
+    return(d>0?'+':'')+d.toFixed(1);
+  }
+
+  async function loadSeoPortal382(force=false){
+    if(SEO382P.loading)return;
+    if(P.seoReports&&!force)return P.seoReports;
+    SEO382P.loading=true;
+    try{
+      const j=await api('/api/portal/seo-reports');
+      P.seoReports=j.reports||[];
+      return P.seoReports;
+    }catch(e){console.error(e);P.seoReports=[];return P.seoReports}
+    finally{SEO382P.loading=false}
+  }
+  window.loadSeoPortal382=loadSeoPortal382;
+
+  function ensureSeoNav382(){
+    const side=document.querySelector('.sidebar');if(!side||document.getElementById('seoNav382p'))return;
+    const foot=side.querySelector('.sidebar-foot');
+    const html='<button class="navbtn" data-page="seo" id="seoNav382p" onclick="goSeo382()">Relatórios SEO</button>';
+    if(foot)foot.insertAdjacentHTML('beforebegin',html);else side.insertAdjacentHTML('beforeend',html);
+  }
+  window.goSeo382=async function(id=''){
+    P.page='seo';P.seoSelected=id||'';await loadSeoPortal382(false);render();
+  };
+
+  dashboard=function(){
+    let h=baseDashboard382();
+    if(P.seoReports===undefined)setTimeout(()=>loadSeoPortal382(false).then(()=>{if(P.page==='dashboard')render()}),0);
+    const r=(P.seoReports||[])[0];
+    if(!r)return h;
+    const m=r.metrics||{};
+    h+='<div class="card seo382p-dashboard"><div class="card-head"><div><div class="eyebrow">RELATÓRIO SEO</div><h3>'+e382p(r.periodLabel||date(r.periodEnd))+'</h3><p class="muted tiny">'+e382p(r.siteUrl||'')+'</p></div><button class="btn" onclick="goSeo382(\''+e382p(r.reportId)+'\')">Ver relatório</button></div>'+
+      '<div class="seo382p-mini"><div><span>Cliques orgânicos</span><b>'+fmt382p(m.organicClicks)+'</b></div><div><span>Impressões</span><b>'+fmt382p(m.impressions)+'</b></div><div><span>Posição média</span><b>'+fmt382p(m.avgPosition,1)+'</b></div><div><span>PageSpeed mobile</span><b>'+fmt382p(m.pagespeedMobile)+'</b></div></div></div>';
+    return h;
+  };
+
+  function listPage382(){
+    const a=P.seoReports||[];
+    return'<div class="hero"><div><div class="eyebrow">SEO & PERFORMANCE</div><h2>Relatórios SEO</h2><p>Acompanhe tráfego orgânico, palavras-chave, conversões e desempenho técnico.</p></div></div>'+
+      (a.length?'<div class="service-grid seo382p-grid">'+a.map(r=>{const m=r.metrics||{};return'<article class="service-card seo382p-card"><div class="card-head"><div><h4>'+e382p(r.periodLabel||date(r.periodEnd))+'</h4><div class="tiny muted">'+e382p(r.siteUrl||'Site')+'</div></div><span class="status ok">Publicado</span></div><div class="seo382p-card-metrics"><div><span>Cliques</span><b>'+fmt382p(m.organicClicks)+'</b></div><div><span>Impressões</span><b>'+fmt382p(m.impressions)+'</b></div><div><span>Posição</span><b>'+fmt382p(m.avgPosition,1)+'</b></div><div><span>Mobile</span><b>'+fmt382p(m.pagespeedMobile)+'</b></div></div><button class="btn primary" onclick="goSeo382(\''+e382p(r.reportId)+'\')">Abrir relatório</button></article>'}).join('')+'</div>':'<div class="card empty">Nenhum relatório SEO publicado para sua conta.</div>');
+  }
+
+  function detailPage382(r){
+    const m=r.metrics||{},kw=r.keywords||[];
+    return'<div class="seo382p-print">'+
+      '<div class="hero seo382p-report-head"><div><div class="eyebrow">RELATÓRIO SEO</div><h2>'+e382p(r.periodLabel||date(r.periodEnd))+'</h2><p>'+e382p(r.siteUrl||'')+' · '+date(r.periodStart)+' a '+date(r.periodEnd)+'</p></div><div class="support"><button class="btn" onclick="goSeo382()">← Voltar</button><button class="btn primary" onclick="printSeo382()">Imprimir / PDF</button></div></div>'+
+      '<div class="kpis seo382p-kpis">'+
+        '<div class="kpi"><span>Cliques orgânicos</span><b>'+fmt382p(m.organicClicks)+'</b><small>Search Console</small></div>'+
+        '<div class="kpi"><span>Impressões</span><b>'+fmt382p(m.impressions)+'</b><small>CTR '+pct382p(m.ctr)+'</small></div>'+
+        '<div class="kpi"><span>Posição média</span><b>'+fmt382p(m.avgPosition,1)+'</b><small>'+fmt382p(m.keywordsTop10)+' termos Top 10</small></div>'+
+        '<div class="kpi"><span>Sessões</span><b>'+fmt382p(m.sessions)+'</b><small>'+fmt382p(m.conversions)+' conversões</small></div>'+
+      '</div>'+
+      '<div class="grid2">'+
+        '<div class="card"><div class="eyebrow">RESUMO EXECUTIVO</div><h3>Visão do período</h3><p>'+e382p(r.summary||'Sem resumo executivo informado.')+'</p></div>'+
+        '<div class="card"><div class="eyebrow">PAGESPEED</div><h3>Performance técnica</h3><div class="seo382p-speed"><div><span>Mobile</span><b>'+fmt382p(m.pagespeedMobile)+'</b><small>'+grade382p(m.pagespeedMobile)+'</small></div><div><span>Desktop</span><b>'+fmt382p(m.pagespeedDesktop)+'</b><small>'+grade382p(m.pagespeedDesktop)+'</small></div></div><div class="tiny muted">LCP: '+fmt382p(m.lcpMobile,0)+' ms mobile · '+fmt382p(m.lcpDesktop,0)+' ms desktop<br>CLS: '+fmt382p(m.clsMobile,3)+' mobile · '+fmt382p(m.clsDesktop,3)+' desktop</div></div>'+
+      '</div>'+
+      '<div class="grid2">'+
+        '<div class="card"><div class="eyebrow">DESTAQUES</div><h3>O que melhorou</h3>'+(r.highlights?.length?'<ul class="seo382p-list">'+r.highlights.map(x=>'<li>'+e382p(x)+'</li>').join('')+'</ul>':'<p class="muted">Nenhum destaque registrado.</p>')+'</div>'+
+        '<div class="card"><div class="eyebrow">PRÓXIMAS AÇÕES</div><h3>Plano do próximo período</h3>'+(r.nextActions?.length?'<ul class="seo382p-list">'+r.nextActions.map(x=>'<li>'+e382p(x)+'</li>').join('')+'</ul>':'<p class="muted">Nenhuma ação registrada.</p>')+'</div>'+
+      '</div>'+
+      '<div class="card"><div class="card-head"><div><div class="eyebrow">PALAVRAS-CHAVE</div><h3>Posicionamento monitorado</h3></div><span class="status">'+kw.length+' termo(s)</span></div>'+
+        (kw.length?'<div class="table-wrap"><table class="table seo382p-table"><thead><tr><th>Palavra-chave</th><th>Posição</th><th>Anterior</th><th>Variação</th><th>Cliques</th><th>Impressões</th><th>Página</th></tr></thead><tbody>'+kw.map(k=>'<tr><td><b>'+e382p(k.keyword)+'</b></td><td>'+fmt382p(k.position,1)+'</td><td>'+fmt382p(k.previousPosition,1)+'</td><td class="'+(Number(k.previousPosition)-Number(k.position)>0?'seo382p-up':'')+'">'+e382p(delta382p(k))+'</td><td>'+fmt382p(k.clicks)+'</td><td>'+fmt382p(k.impressions)+'</td><td><span class="tiny">'+e382p(k.landingPage||'—')+'</span></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">Nenhuma palavra-chave adicionada.</div>')+
+      '</div>'+
+      '<div class="card"><div class="eyebrow">SEO LOCAL</div><h3>Presença local</h3><div class="seo382p-local"><div><span>Avaliação Google</span><b>'+fmt382p(m.localRating,1)+'</b></div><div><span>Avaliações</span><b>'+fmt382p(m.localReviews)+'</b></div><div><span>Usuários</span><b>'+fmt382p(m.users)+'</b></div><div><span>Conversões</span><b>'+fmt382p(m.conversions)+'</b></div></div></div>'+
+    '</div>';
+  }
+
+  function seoPage382(){
+    const id=P.seoSelected||'',r=id?report382p(id):null;
+    return r?detailPage382(r):listPage382();
+  }
+  window.printSeo382=function(){window.print()};
+
+  render=function(){
+    ensureSeoNav382();
+    if(P.page==='seo'){
+      nav();document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page==='seo'));
+      if(P.seoReports===undefined&&!SEO382P.loading){$('main').innerHTML='<div class="card empty">Carregando relatórios...</div>';setTimeout(()=>loadSeoPortal382(true).then(()=>render()),0);return}
+      $('clientChip').textContent=P.data?.client?.name||'';$('userChip').textContent=P.data?.user?.username+' · '+roleLabel(P.data?.user?.role);
+      $('main').innerHTML=seoPage382();return;
+    }
+    baseRender382();
+  };
+
+  setTimeout(async()=>{ensureSeoNav382();if(P.data){await loadSeoPortal382(false);if(P.page==='dashboard')render()}},900);
+})();
+</script><script id="portalClientDocs383Script">'use strict';
+(function(){
+  const PD383={loading:false};
+  const baseDashboard383=dashboard;
+  const baseRender383=render;
+
+  function doc383(type,id){return (P.portalDocs||[]).find(x=>x.entityType===type&&x.entityId===id)||null}
+  function label383(t){return t==='proposal'?'Proposta':'Contrato'}
+  function dec383(d){if(!d)return'Aguardando decisão';if(!d.current)return'Nova aprovação necessária';return d.decision}
+  function dclass383(d){const s=dec383(d);return /Aprovado|Aceito/.test(s)?'ok':/Recusado/.test(s)?'bad':'warn'}
+  function money383(v){return money(Number(v||0))}
+  function proposalTotal383(d){return Number(d?.snapshot?.firstCycleTotal||d?.payload?.firstCycleTotal||0)}
+  function contractMonthly383(d){return Number(d?.snapshot?.monthlyAmount||d?.payload?.monthlyAmount||0)}
+
+  async function loadDocs383(force=false){
+    if(PD383.loading)return;
+    if(P.portalDocs&&!force)return P.portalDocs;
+    PD383.loading=true;
+    try{const j=await api('/api/portal/documents');P.portalDocs=j.documents||[];return P.portalDocs}
+    catch(e){console.error(e);P.portalDocs=[];return P.portalDocs}
+    finally{PD383.loading=false}
+  }
+  window.loadPortalDocs383=loadDocs383;
+
+  function ensureNav383(){
+    const side=document.querySelector('.sidebar');if(!side||document.getElementById('docsNav383'))return;
+    const foot=side.querySelector('.sidebar-foot');
+    const html='<button class="navbtn" data-page="documents" id="docsNav383" onclick="goDocs383()">Propostas e contratos <span id="docsBadge383" class="op381-badge hidden"></span></button>';
+    if(foot)foot.insertAdjacentHTML('beforebegin',html);else side.insertAdjacentHTML('beforeend',html);
+  }
+  window.goDocs383=async function(type='',id=''){
+    P.page='documents';P.docSelected=type&&id?type+':'+id:'';
+    await loadDocs383(false);render();
+  };
+  function badge383(){
+    const b=document.getElementById('docsBadge383'),n=(P.portalDocs||[]).filter(x=>!x.decision||!x.decision.current).length;
+    if(b){b.textContent=n;b.classList.toggle('hidden',!n)}
+  }
+
+  dashboard=function(){
+    let h=baseDashboard383();
+    if(P.portalDocs===undefined)setTimeout(()=>loadDocs383(false).then(()=>{if(P.page==='dashboard')render()}),0);
+    const a=P.portalDocs||[],pending=a.filter(x=>!x.decision||!x.decision.current);
+    if(!a.length)return h;
+    h+='<div class="card pd383-dashboard"><div class="card-head"><div><div class="eyebrow">DOCUMENTOS</div><h3>Propostas e contratos</h3><p class="muted tiny">'+pending.length+' documento(s) aguardando sua decisão.</p></div><button class="btn" onclick="goDocs383()">Abrir documentos</button></div>'+
+      '<div class="pd383-mini-grid"><div><span>Publicados</span><b>'+a.length+'</b></div><div><span>Aguardando</span><b>'+pending.length+'</b></div><div><span>Aprovados/Aceitos</span><b>'+a.filter(x=>x.decision?.current&&/Aprovado|Aceito/.test(x.decision.decision)).length+'</b></div></div></div>';
+    return h;
+  };
+
+  function list383(){
+    const a=P.portalDocs||[];
+    return'<div class="hero"><div><div class="eyebrow">DOCUMENTOS</div><h2>Propostas e contratos</h2><p>Visualize, aprove propostas e faça o aceite eletrônico dos contratos publicados para sua empresa.</p></div></div>'+
+      '<div class="notice pd383-legal"><b>Aceite eletrônico:</b> ao aprovar ou aceitar, o sistema registra a versão do documento, usuário, nome informado e data/hora da decisão.</div>'+
+      (a.length?'<div class="pd383-grid">'+a.map(d=>{const s=d.snapshot||{},isP=d.entityType==='proposal',value=isP?proposalTotal383(d):contractMonthly383(d);return'<article class="card pd383-card"><div class="card-head"><div><div class="eyebrow">'+label383(d.entityType).toUpperCase()+'</div><h3>'+e(s.title||d.payload?.title||label383(d.entityType))+'</h3><div class="tiny muted">'+(isP?((s.items?.length||0)+' serviço(s)'):'Vencimento dia '+e(s.billingDay||10))+'</div></div><span class="status '+dclass383(d.decision)+'">'+e(dec383(d.decision))+'</span></div><div class="pd383-value"><span>'+(isP?'Primeiro ciclo':'Mensalidade')+'</span><b>'+money383(value)+'</b></div><button class="btn primary" onclick="goDocs383(\''+e(d.entityType)+'\',\''+e(d.entityId)+'\')">Abrir '+label383(d.entityType).toLowerCase()+'</button></article>'}).join('')+'</div>':'<div class="card empty">Nenhuma proposta ou contrato publicado para sua conta.</div>');
+  }
+
+  function detail383(d){
+    const s=d.snapshot||{},isP=d.entityType==='proposal',dec=d.decision,current=dec?.current;
+    let main='';
+    if(isP){
+      main='<div class="grid kpis pd383-kpis"><div class="kpi"><span>Implantação</span><b>'+money383(s.setupNet)+'</b></div><div class="kpi"><span>Mensal</span><b>'+money383(s.monthlyNet)+'</b></div><div class="kpi"><span>Primeiro ciclo</span><b>'+money383(s.firstCycleTotal)+'</b></div><div class="kpi"><span>Validade</span><b>'+e(s.validityDays||15)+' dias</b></div></div>'+
+        '<div class="card"><div class="eyebrow">ESCOPO</div><h3>Serviços e investimento</h3><div class="pd383-items">'+(s.items||[]).map(i=>'<div><div><b>'+e(i.name)+'</b><span>'+e(i.description||'')+'</span></div><div class="pd383-item-side">'+e(i.quantity||1)+' × '+money383(i.unitPrice)+'<br><b>'+money383(i.lineTotal)+'</b></div></div>').join('')+'</div></div>'+
+        (s.diagnosisSummary?'<div class="card"><h3>Diagnóstico / objetivo</h3><p>'+e(s.diagnosisSummary)+'</p></div>':'')+
+        (s.paymentTerms?'<div class="card"><h3>Condições de pagamento</h3><p>'+e(s.paymentTerms)+'</p></div>':'')+
+        (s.notes?'<div class="card"><h3>Observações</h3><p>'+e(s.notes)+'</p></div>':'');
+    }else{
+      main='<div class="grid kpis pd383-kpis"><div class="kpi"><span>Mensalidade</span><b>'+money383(s.monthlyAmount)+'</b></div><div class="kpi"><span>Vencimento</span><b>Dia '+e(s.billingDay||10)+'</b></div><div class="kpi"><span>Início</span><b>'+date(s.startDate)+'</b></div><div class="kpi"><span>Fim</span><b>'+date(s.endDate)+'</b></div></div>'+
+        '<div class="card"><div class="eyebrow">SERVIÇOS</div><h3>Escopo contratado</h3><div class="pd383-services">'+(s.services||[]).map(x=>'<span>'+e(x)+'</span>').join('')+'</div></div>'+
+        (s.notes?'<div class="card"><h3>Observações</h3><p>'+e(s.notes)+'</p></div>':'');
+    }
+    const decision=current?'<div class="card pd383-decision"><div class="eyebrow">DECISÃO REGISTRADA</div><h3>'+e(dec.decision)+'</h3><p>Por <b>'+e(dec.actorName||'cliente')+'</b> em '+date(dec.createdAt)+'.</p>'+(dec.comment?'<p>'+e(dec.comment)+'</p>':'')+'</div>':'';
+    const action=!current?'<div class="card pd383-action"><div class="card-head"><div><div class="eyebrow">AÇÃO NECESSÁRIA</div><h3>'+(isP?'Decisão sobre a proposta':'Aceite do contrato')+'</h3></div></div><p>'+(isP?'Aprove para registrar a concordância comercial, ou recuse informando um comentário.':'Leia o contrato e confirme o aceite eletrônico, ou recuse informando um comentário.')+'</p><div class="support"><button class="btn primary" onclick="openDecision383(\''+e(d.entityType)+'\',\''+e(d.entityId)+'\',\''+(isP?'Aprovado':'Aceito')+'\')">'+(isP?'Aprovar proposta':'Aceitar contrato')+'</button><button class="btn" onclick="openDecision383(\''+e(d.entityType)+'\',\''+e(d.entityId)+'\',\'Recusado\')">Recusar</button></div></div>':'';
+    return'<div class="pd383-print"><div class="hero"><div><div class="eyebrow">'+label383(d.entityType).toUpperCase()+'</div><h2>'+e(s.title||label383(d.entityType))+'</h2><p>Publicado em '+date(d.publishedAt)+'</p></div><div class="support"><button class="btn" onclick="goDocs383()">← Voltar</button><button class="btn" onclick="printDoc383()">Imprimir / PDF</button></div></div>'+main+decision+action+'</div>';
+  }
+
+  function page383(){
+    if(P.docSelected){const [t,id]=P.docSelected.split(':');const d=doc383(t,id);if(d)return detail383(d)}
+    return list383();
+  }
+  window.printDoc383=function(){window.print()};
+
+  window.openDecision383=function(type,id,decision){
+    const d=doc383(type,id);if(!d)return;
+    document.body.insertAdjacentHTML('beforeend','<div id="pdModal383" class="op381-modal-back"><div class="op381-modal"><button class="op381-x" onclick="closeDecision383()">×</button><div class="eyebrow">'+e(label383(type).toUpperCase())+'</div><h3>'+e(decision)+'</h3><p class="muted">Informe o nome completo da pessoa responsável por esta decisão.</p><div class="field"><label>NOME COMPLETO *</label><input id="pd383_name" class="input" maxlength="180"></div><div class="field"><label>COMENTÁRIO <span class="muted">(opcional)</span></label><textarea id="pd383_comment" rows="4" maxlength="2000"></textarea></div>'+(decision!=='Recusado'?'<label class="pd383-check"><input id="pd383_terms" type="checkbox"><span>Li o documento apresentado e concordo com seus termos e valores.</span></label>':'')+'<div class="actions"><button class="btn" onclick="closeDecision383()">Cancelar</button><button class="btn '+(decision==='Recusado'?'':'primary')+'" onclick="submitDecision383(\''+e(type)+'\',\''+e(id)+'\',\''+e(decision)+'\')">Confirmar '+e(decision.toLowerCase())+'</button></div></div></div>');
+  };
+  window.closeDecision383=function(){document.getElementById('pdModal383')?.remove()};
+  window.submitDecision383=async function(type,id,decision){
+    const actorName=document.getElementById('pd383_name')?.value.trim()||'',comment=document.getElementById('pd383_comment')?.value.trim()||'',acceptedTerms=decision==='Recusado'?false:!!document.getElementById('pd383_terms')?.checked;
+    if(actorName.length<3)return alert('Informe o nome completo.');
+    if(decision!=='Recusado'&&!acceptedTerms)return alert('Confirme que leu e concorda com o documento.');
+    if(!confirm('Confirmar '+decision.toLowerCase()+'? Esta decisão ficará registrada no histórico.'))return;
+    try{
+      const j=await api('/api/portal/documents/decision',{method:'POST',body:JSON.stringify({entityType:type,entityId:id,decision,actorName,comment,acceptedTerms})});
+      P.portalDocs=j.documents||[];closeDecision383();render();
+    }catch(err){alert(err.message)}
+  };
+
+  render=function(){
+    ensureNav383();
+    if(P.page==='documents'){
+      nav();document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page==='documents'));
+      if(P.portalDocs===undefined&&!PD383.loading){$('main').innerHTML='<div class="card empty">Carregando documentos...</div>';setTimeout(()=>loadDocs383(true).then(()=>render()),0);return}
+      $('clientChip').textContent=P.data?.client?.name||'';$('userChip').textContent=P.data?.user?.username+' · '+roleLabel(P.data?.user?.role);
+      $('main').innerHTML=page383();badge383();return;
+    }
+    baseRender383();badge383();
+  };
+
+  setTimeout(async()=>{ensureNav383();if(P.data){await loadDocs383(false);if(P.page==='dashboard')render()}},1100);
+})();
+</script><script id="portalBilling384Script">'use strict';
+(function(){
+  const PB384={loading:false};
+  const baseFinance384=financePage;
+  const baseDashboard384=dashboard;
+
+  function money384p(v){return money(Number(v||0))}
+  function e384p(v){return e(v)}
+  function date384p(v){return date(v)}
+  function status384p(i){const s=i.calc?.overdue&&!/Pago|Cancel|Exclu/i.test(i.status)?'Atrasado':i.status;return statusBadge(s)}
+  function pct384p(v){return Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:2})+'%'}
+
+  async function loadPortalBilling384(force=false){
+    if(!P.data?.permissions?.finance){P.billing384={allowed:false,invoices:[],summary:{}};return P.billing384}
+    if(PB384.loading)return P.billing384;
+    if(P.billing384&&!force)return P.billing384;
+    PB384.loading=true;
+    try{P.billing384=await api('/api/portal/billing');return P.billing384}
+    catch(err){console.error(err);P.billing384={allowed:false,invoices:[],summary:{}};return P.billing384}
+    finally{PB384.loading=false}
+  }
+  window.loadPortalBilling384=loadPortalBilling384;
+
+  dashboard=function(){
+    let h=baseDashboard384();
+    if(!P.data?.permissions?.finance)return h;
+    if(P.billing384===undefined)setTimeout(()=>loadPortalBilling384(false).then(()=>{if(P.page==='dashboard')render()}),0);
+    const b=P.billing384;if(!b?.allowed||!b.invoices?.length)return h;
+    h+='<div class="card pb384-dash"><div class="card-head"><div><div class="eyebrow">FINANCEIRO RECORRENTE</div><h3>Mensalidades</h3><p class="muted tiny">Saldo atualizado conforme pagamentos, desconto e encargos configurados.</p></div><button class="btn" onclick="go(\'finance\')">Abrir financeiro</button></div>'+
+      '<div class="pb384-mini"><div><span>Em aberto</span><b>'+e384p(b.summary.open||0)+'</b></div><div><span>Saldo</span><b>'+money384p(b.summary.balance)+'</b></div><div><span>Em atraso</span><b class="'+(Number(b.summary.overdue)>0?'overdue':'')+'">'+money384p(b.summary.overdue)+'</b></div><div><span>Pago</span><b>'+money384p(b.summary.paid)+'</b></div></div></div>';
+    return h;
+  };
+
+  financePage=function(){
+    let h=baseFinance384();
+    if(!P.data.permissions.finance)return h;
+    if(P.billing384===undefined)setTimeout(()=>loadPortalBilling384(false).then(()=>{if(P.page==='finance')render()}),0);
+    const b=P.billing384;if(!b?.allowed)return h;
+    const a=b.invoices||[];
+    h+='<div class="card pb384-main"><div class="card-head"><div><div class="eyebrow">RECORRÊNCIA</div><h3>Mensalidades e composição</h3><p class="muted tiny">Veja serviços incluídos, pagamentos registrados e saldo atualizado.</p></div></div>'+
+      '<div class="pb384-mini"><div><span>Cobranças abertas</span><b>'+e384p(b.summary.open||0)+'</b></div><div><span>Saldo total</span><b>'+money384p(b.summary.balance)+'</b></div><div><span>Em atraso</span><b class="'+(Number(b.summary.overdue)>0?'overdue':'')+'">'+money384p(b.summary.overdue)+'</b></div><div><span>Total pago</span><b>'+money384p(b.summary.paid)+'</b></div></div>'+
+    '</div>'+
+    (a.length?'<div class="pb384-invoices">'+a.map(invoiceCard384p).join('')+'</div>':'<div class="card empty">Nenhuma mensalidade recorrente gerada ainda.</div>');
+    return h;
+  };
+
+  function invoiceCard384p(i){
+    const c=i.calc||{},t=i.terms||{};
+    return'<article class="card pb384-invoice">'+
+      '<div class="card-head"><div><div class="eyebrow">'+e384p(i.period)+'</div><h3>'+e384p(i.description)+'</h3><div class="tiny muted">Vencimento '+date384p(i.dueDate)+' · '+e384p(i.paymentMethod||'Forma de pagamento não informada')+'</div></div>'+status384p(i)+'</div>'+
+      '<div class="pb384-invoice-kpis"><div><span>Principal</span><b>'+money384p(i.principal)+'</b></div><div><span>Pago</span><b>'+money384p(c.paidTotal)+'</b></div><div><span>'+(c.discount?'Desconto':'Encargos')+'</span><b>'+(c.discount?('- '+money384p(c.discount)):money384p((c.lateFee||0)+(c.interest||0)))+'</b></div><div><span>Saldo</span><b>'+money384p(c.balance)+'</b></div></div>'+
+      (c.overdue?'<div class="notice pb384-overdue">Em atraso após a carência: '+e384p(c.daysOverdue)+' dia(s). Multa '+pct384p(t.lateFeePercent)+' e juros '+pct384p(t.monthlyInterestPercent)+'/mês conforme configuração da cobrança.</div>':'')+
+      (c.discountEligible?'<div class="notice pb384-discount">Pagamento antecipado elegível a desconto de '+pct384p(t.earlyDiscountPercent)+'.</div>':'')+
+      '<div class="pb384-items"><div class="eyebrow">COMPOSIÇÃO</div>'+(i.items||[]).map(x=>'<div class="row"><div class="row-main"><b>'+e384p(x.description)+'</b></div><div class="row-side"><b>'+money384p(x.totalAmount)+'</b></div></div>').join('')+'</div>'+
+      ((i.payments||[]).length?'<div class="pb384-payments"><div class="eyebrow">PAGAMENTOS REGISTRADOS</div>'+(i.payments||[]).map(p=>'<div class="row"><div class="row-main"><b>'+money384p(p.amount)+'</b><div>'+date384p(p.paidAt)+' · '+e384p(p.method||'—')+'</div></div><div class="row-side"><div>'+e384p(p.note||'')+'</div></div></div>').join('')+'</div>':'')+
+    '</article>';
+  }
+
+  setTimeout(async()=>{if(P.data?.permissions?.finance){await loadPortalBilling384(false);if(P.page==='dashboard'||P.page==='finance')render()}},1300);
+})();</script><script id="portalTasks391Script">'use strict';
+(function(){
+  const PT391={loading:false};
+  const baseDashboard391=dashboard;
+  const baseRender391=render;
+
+  function task391p(id){return (P.tasks391||[]).find(x=>x.taskId===id)||null}
+  function status391p(v){return statusBadge(v==='Concluida'?'Concluída':v)}
+  function dt391p(v){if(!v)return'—';try{return new Date(v).toLocaleDateString('pt-BR')}catch{return date(v)}}
+  function project391p(t){return t.project?.title||t.project?.name||''}
+
+  async function loadPortalTasks391(force=false){
+    if(PT391.loading)return P.tasks391;
+    if(P.tasks391&&!force)return P.tasks391;
+    PT391.loading=true;
+    try{const j=await api('/api/portal/tasks');P.tasks391=j.tasks||[];P.tasks391Summary=j.summary||{};return P.tasks391}
+    catch(err){console.error(err);P.tasks391=[];P.tasks391Summary={};return P.tasks391}
+    finally{PT391.loading=false}
+  }
+  window.loadPortalTasks391=loadPortalTasks391;
+
+  function ensureTaskNav391(){
+    const side=document.querySelector('.sidebar');if(!side||document.getElementById('portalTasks391'))return;
+    const foot=side.querySelector('.sidebar-foot');
+    const html='<button class="navbtn" data-page="tasks391" id="portalTasks391" onclick="goPortalTasks391()">Acompanhamento <span id="pt391Badge" class="op381-badge hidden"></span></button>';
+    if(foot)foot.insertAdjacentHTML('beforebegin',html);else side.insertAdjacentHTML('beforeend',html);
+  }
+  window.goPortalTasks391=async function(id=''){P.page='tasks391';P.task391Selected=id||'';await loadPortalTasks391(false);render()};
+
+  function badge391p(){
+    const b=document.getElementById('pt391Badge'),n=Number(P.tasks391Summary?.waitingClient||0);
+    if(b){b.textContent=n;b.classList.toggle('hidden',!n)}
+  }
+
+  dashboard=function(){
+    let h=baseDashboard391();
+    if(P.tasks391===undefined)setTimeout(()=>loadPortalTasks391(false).then(()=>{if(P.page==='dashboard')render()}),0);
+    const s=P.tasks391Summary||{},a=P.tasks391||[];
+    if(!a.length)return h;
+    h+='<div class="card pt391-dashboard"><div class="card-head"><div><div class="eyebrow">ACOMPANHAMENTO</div><h3>Tarefas e entregas</h3><p class="muted tiny">Veja o andamento do trabalho que sua equipe EXEKUTA publicou para acompanhamento.</p></div><button class="btn" onclick="goPortalTasks391()">Ver acompanhamento</button></div>'+
+      '<div class="pt391-mini"><div><span>Ativas</span><b>'+e(s.active||0)+'</b></div><div><span>Em andamento</span><b>'+e(s.inProgress||0)+'</b></div><div><span>Aguardando você</span><b>'+e(s.waitingClient||0)+'</b></div><div><span>Concluídas</span><b>'+e(s.completed||0)+'</b></div></div></div>';
+    return h;
+  };
+
+  function list391p(){
+    const a=P.tasks391||[],active=a.filter(x=>!['Concluida','Cancelada'].includes(x.status)),done=a.filter(x=>x.status==='Concluida');
+    return'<div class="hero"><div><div class="eyebrow">ACOMPANHAMENTO</div><h2>Tarefas e entregas</h2><p>Acompanhe o que está em execução, o que depende da sua resposta e o que já foi concluído.</p></div></div>'+
+      '<div class="kpis pt391-kpis"><div class="kpi"><span>Ativas</span><b>'+active.length+'</b></div><div class="kpi"><span>Em andamento</span><b>'+active.filter(x=>x.status==='Em andamento').length+'</b></div><div class="kpi"><span>Aguardando você</span><b>'+active.filter(x=>x.status==='Aguardando cliente').length+'</b></div><div class="kpi"><span>Concluídas</span><b>'+done.length+'</b></div></div>'+
+      (a.length?'<div class="pt391-grid">'+a.map(t=>'<article class="card pt391-card"><div class="card-head"><div><div class="eyebrow">'+e(t.priority||'Normal')+'</div><h3>'+e(t.title)+'</h3><div class="tiny muted">'+e(project391p(t)||'Atividade geral')+'</div></div>'+status391p(t.status)+'</div><p>'+e(t.description||'')+'</p>'+(t.checklist?.length?'<div class="progress"><span style="width:'+Math.max(0,Math.min(100,t.checklistProgress||0))+'%"></span></div><div class="tiny muted">'+e(t.checklistProgress||0)+'% concluído</div>':'')+'<div class="pt391-card-foot"><span class="tiny muted">Prazo: '+dt391p(t.dueAt)+'</span><button class="btn" onclick="goPortalTasks391(\''+e(t.taskId)+'\')">Abrir</button></div></article>').join('')+'</div>':'<div class="card empty">Nenhuma tarefa publicada para acompanhamento.</div>');
+  }
+
+  function detail391p(t){
+    const checks=t.checklist||[],comments=t.comments||[];
+    return'<div class="pt391-detail"><div class="hero"><div><div class="eyebrow">ACOMPANHAMENTO</div><h2>'+e(t.title)+'</h2><p>'+e(project391p(t)||'Atividade geral')+' · Prazo '+dt391p(t.dueAt)+'</p></div><div class="support"><button class="btn" onclick="goPortalTasks391()">← Voltar</button>'+status391p(t.status)+'</div></div>'+
+      '<div class="grid2"><div class="card"><div class="eyebrow">DESCRIÇÃO</div><h3>O que está sendo feito</h3><p>'+e(t.description||'Sem descrição pública.')+'</p>'+(checks.length?'<div class="pt391-checklist"><div class="eyebrow">CHECKLIST</div>'+checks.map(x=>'<div class="'+(x.done?'done':'')+'"><span>'+(x.done?'✓':'○')+'</span><b>'+e(x.label)+'</b></div>').join('')+'</div>':'')+'</div>'+
+      '<div class="card"><div class="eyebrow">STATUS</div><h3>'+e(t.status==='Concluida'?'Concluída':t.status)+'</h3><div class="pt391-facts"><div><span>Prioridade</span><b>'+e(t.priority)+'</b></div><div><span>Prazo</span><b>'+dt391p(t.dueAt)+'</b></div><div><span>Progresso</span><b>'+e(t.checklistProgress||0)+'%</b></div><div><span>Atualizado</span><b>'+dt391p(t.updatedAt)+'</b></div></div></div></div>'+
+      '<div class="card"><div class="card-head"><div><div class="eyebrow">CONVERSA</div><h3>Comentários da tarefa</h3></div></div><div class="pt391-comments">'+(comments.length?comments.map(c=>'<div class="pt391-comment '+(c.authorType==='Cliente'?'client':'team')+'"><div class="tiny muted">'+e(c.authorName||c.authorType)+' · '+dt391p(c.createdAt)+'</div><p>'+e(c.body)+'</p></div>').join(''):'<div class="empty">Nenhum comentário publicado ainda.</div>')+'</div><div class="field"><label>ENVIAR COMENTÁRIO</label><textarea id="pt391Comment" rows="4" maxlength="6000" placeholder="Escreva sua resposta ou observação..."></textarea></div><div class="actions"><button class="btn primary" onclick="sendTaskComment391(\''+e(t.taskId)+'\')">Enviar comentário</button></div></div>'+
+    '</div>';
+  }
+
+  function page391p(){
+    if(P.task391Selected){const t=task391p(P.task391Selected);if(t)return detail391p(t)}
+    return list391p();
+  }
+  window.sendTaskComment391=async function(id){
+    const body=document.getElementById('pt391Comment')?.value.trim()||'';if(!body)return;
+    try{const j=await api('/api/portal/tasks/comment',{method:'POST',body:JSON.stringify({taskId:id,body})});P.tasks391=j.view?.tasks||[];P.tasks391Summary=j.view?.summary||{};render()}catch(err){alert(err.message)}
+  };
+
+  render=function(){
+    ensureTaskNav391();
+    if(P.page==='tasks391'){
+      nav();document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page==='tasks391'));
+      if(P.tasks391===undefined&&!PT391.loading){$('main').innerHTML='<div class="card empty">Carregando acompanhamento...</div>';setTimeout(()=>loadPortalTasks391(true).then(()=>render()),0);return}
+      $('clientChip').textContent=P.data?.client?.name||'';$('userChip').textContent=P.data?.user?.username+' · '+roleLabel(P.data?.user?.role);
+      $('main').innerHTML=page391p();badge391p();return;
+    }
+    baseRender391();badge391p();
+  };
+
+  setTimeout(async()=>{ensureTaskNav391();if(P.data){await loadPortalTasks391(false);if(P.page==='dashboard')render()}},1500);
+})();</script><script id="portalProspecting452Script">'use strict';
+(function(){
+  const PP452={loading:false,data:null,saved:{}};
+  const PP452_REGIONS=[{"name":"Guaratiba","cities":["Rio de Janeiro"]},{"name":"Barra da Tijuca","cities":["Rio de Janeiro"]},{"name":"Recreio dos Bandeirantes","cities":["Rio de Janeiro"]},{"name":"Jacarepaguá","cities":["Rio de Janeiro"]},{"name":"Campo Grande","cities":["Rio de Janeiro"]},{"name":"Santa Cruz","cities":["Rio de Janeiro"]},{"name":"Zona Sul RJ","cities":["Rio de Janeiro"]},{"name":"Centro RJ","cities":["Rio de Janeiro"]},{"name":"Zona Norte RJ","cities":["Rio de Janeiro"]},{"name":"Baixada Fluminense","cities":["Duque de Caxias","Nova Iguaçu","Belford Roxo","São João de Meriti","Queimados","Japeri","Mesquita","Nilópolis","Magé","Seropédica"]},{"name":"Grande Niterói","cities":["Niterói","São Gonçalo","Maricá","Itaboraí"]},{"name":"Região dos Lagos","cities":["Cabo Frio","Armação dos Búzios","São Pedro da Aldeia","Iguaba Grande","Saquarema","Araruama","Arraial do Cabo"]}];
+  const baseDashboard452=dashboard;
+  const baseRender452=render;
+  function isOwner452(){return String(P.data?.user?.role||'').toLowerCase()==='proprietario'}
+  function waLink452(phone){let d=String(phone||'').replace(/\D/g,'');if(!d)return'';if(d.startsWith('55')&&(d.length===12||d.length===13))return d;if(d.length===10||d.length===11)return'55'+d;return d}
+  function ppMsg452(text,kind){const m=document.getElementById('pp452Msg');if(m){m.textContent=text;m.className='pp452-msg'+(kind?' '+kind:'')}}
+  function ensureProsNav452(){
+    const side=document.querySelector('.sidebar');if(!side)return;
+    if(!isOwner452()){const b=document.getElementById('portalPros452');if(b)b.remove();return}
+    if(document.getElementById('portalPros452'))return;
+    const foot=side.querySelector('.sidebar-foot');
+    const html='<button class="navbtn" data-page="prospecting" id="portalPros452" onclick="goPortalPros452()">Prospecção</button>';
+    if(foot)foot.insertAdjacentHTML('beforebegin',html);else side.insertAdjacentHTML('beforeend',html);
+  }
+  window.goPortalPros452=async function(){P.page='prospecting';PP452.data=PP452.data||{ok:false};render()};
+  window.ppRegionChanged452=function(){
+    const v=document.getElementById('pp452Region')?.value||'';
+    document.getElementById('pp452RegionCustom')?.classList.toggle('hidden',v!=='__custom__');
+    const sel=document.getElementById('pp452City');if(!sel)return;
+    const r=PP452_REGIONS.find(function(x){return x.name===v});
+    sel.innerHTML=r?r.cities.map(function(c){return '<option>'+c+'</option>'}).join('')+'<option value="__custom__">Outra (digitar)</option>':'<option value="">— Selecione a região primeiro —</option>';
+    document.getElementById('pp452CityCustom')?.classList.add('hidden');
+  };
+  window.ppCityChanged452=function(){document.getElementById('pp452CityCustom')?.classList.toggle('hidden',(document.getElementById('pp452City')?.value||'')!=='__custom__')};
+  async function ppRun452(){
+    const seg=String(document.getElementById('pp452Seg')?.value||'').trim();
+    if(!seg){ppMsg452('Informe o segmento para buscar empresas.','warn');return}
+    const body={
+      segment:seg,
+      region:(function(){const s=document.getElementById('pp452Region');const v=s?s.value:'';return v==='__custom__'?String(document.getElementById('pp452RegionCustom')?.value||'').trim():String(v).trim()})(),
+      city:(function(){const s=document.getElementById('pp452City');const v=s?s.value:'';return v==='__custom__'?String(document.getElementById('pp452CityCustom')?.value||'').trim():String(v).trim()})(),
+      state:String(document.getElementById('pp452State')?.value||'').trim(),
+      limit:Number(document.getElementById('pp452Limit')?.value||20),
+      sources:[['maps','pp452Maps'],['google','pp452Google'],['instagram','pp452Insta'],['facebook','pp452Face']].filter(x=>document.getElementById(x[1])?.checked).map(x=>x[0])
+    };
+    if(!body.sources.length){ppMsg452('Selecione ao menos uma fonte de busca.','warn');return}
+    PP452.loading=true;ppMsg452('Pesquisando empresas...');
+    try{
+      const j=await api('/api/portal/prospect',{method:'POST',body:JSON.stringify(body)});
+      if(!j.ok)throw new Error(j.error||'Falha na busca.');
+      PP452.data=j;PP452.saved={};ppMsg452('');
+      const el=document.getElementById('pp452Results');if(el)el.innerHTML=ppResults452();
+      ppMsg452('Pesquisa concluída'+(j.warnings&&j.warnings.length?' · '+j.warnings.join(' | '):''),'ok');
+    }catch(err){ppMsg452(err.message||'Falha na busca.','warn')}
+    finally{PP452.loading=false}
+  }
+  window.ppRun452=ppRun452;
+  function ppWebCard452(x){
+    return '<article class="pp452-card"><div class="pp452-src">'+e(String(x.source||'WEB').toUpperCase())+'</div><h4>'+e(x.name||'')+'</h4><p>'+e(x.snippet||'')+'</p>'+
+      (x.link?'<div class="pp452-actions"><a class="btn" target="_blank" rel="noopener" href="'+e(x.link)+'">Abrir resultado</a></div>':'')+'</article>';
+  }
+  function ppPhoto452(x){
+    const ph=x.photoName||'';
+    const letter=e(String(x.category||x.name||'P').slice(0,1).toUpperCase());
+    if(!ph)return'<div class="pp452-photo-wrap"><div class="pp452-photo-empty"><span>'+letter+'</span></div></div>';
+    return'<div class="pp452-photo-wrap"><img class="pp452-photo" loading="lazy" alt="" src="/api/portal/place-photo?name='+encodeURIComponent(ph)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'grid\'"><div class="pp452-photo-empty" style="display:none"><span>'+letter+'</span></div></div>';
+  }
+  function ppMapCard452(x,i){
+    const key=x.placeId||(x.name+'|'+x.address);
+    const done=!!PP452.saved[key];
+    const wa=waLink452(x.phone);
+    const tags=[];
+    if(x.category)tags.push('<span class="pp452-tag">'+e(x.category)+'</span>');
+    if(Number(x.reviews||0))tags.push('<span class="pp452-tag pp452-tag-star">⭐ '+e(String(x.rating||'—'))+' · '+e(String(x.reviews))+'</span>');
+    if(!x.website)tags.push('<span class="pp452-tag pp452-tag-hot">Sem site</span>');
+    return '<article class="pp452-lead">'+ppPhoto452(x)+
+      '<div class="pp452-lead-body"><h4>'+e(x.name||'')+'</h4><p class="pp452-addr">'+e(x.address||'')+'</p>'+
+      (x.phone?'<p class="pp452-addr">📞 '+e(x.phone)+'</p>':'')+
+      '<div class="pp452-tags">'+tags.join('')+'</div>'+
+      '<div class="pp452-actions">'+
+      (done?'<span class="pp452-msg ok" style="margin:0">✓ Salvo no CRM</span>':'<button class="btn" onclick="ppSave452('+i+')">+ Salvar lead</button>')+
+      (wa?'<a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+wa+'">WhatsApp</a>':'')+
+      (x.mapsUrl?'<a class="btn" target="_blank" rel="noopener" href="'+e(x.mapsUrl)+'">Maps</a>':'')+
+      (x.website?'<a class="btn" target="_blank" rel="noopener" href="'+e(x.website)+'">Site</a>':'')+
+      '</div></div></article>';
+  }
+  function ppResults452(){
+    if(!PP452.data||!PP452.data.ok)return'';
+    const r=PP452.data.results||{};
+    const maps=r.maps||[],other=[...(r.google||[]),...(r.instagram||[]),...(r.facebook||[])];
+    if(!maps.length&&!other.length)return'<div class="card empty">Nenhuma empresa encontrada. Ajuste a busca ou as fontes.</div>';
+    let h='<div class="pp452-actions" style="margin-top:14px">'+
+      (maps.length?'<button class="btn" onclick="ppSaveAll452()">Salvar todos no CRM</button>':'')+'</div>';
+    if(maps.length)h+='<div class="pp452-grid">'+maps.map(ppMapCard452).join('')+'</div>';
+    if(other.length)h+='<h3 style="margin:18px 0 4px">Resultados da web</h3><div class="pp452-grid">'+other.map(ppWebCard452).join('')+'</div>';
+    return h;
+  }
+  window.ppSave452=async function(i){
+    const x=PP452.data?.results?.maps?.[i];if(!x)return;
+    const key=x.placeId||(x.name+'|'+x.address);
+    try{
+      const j=await api('/api/portal/prospect/save',{method:'POST',body:JSON.stringify({entityType:'lead',payload:{name:x.name,companyName:x.name,address:x.address,phone:x.phone,whatsapp:x.phone,website:x.website,source:'Google Maps',placeId:x.placeId,segment:x.segment,city:x.city,state:x.state,crmStatus:'Novo',category:x.category,rating:x.rating,reviews:x.reviews,mapsUrl:x.mapsUrl},query:PP452.data.query})});
+      if(!j.ok)throw new Error(j.error||'Falha ao salvar.');
+      PP452.saved[key]=true;
+      const el=document.getElementById('pp452Results');if(el)el.innerHTML=ppResults452();
+      ppMsg452('Lead salvo no CRM — a equipe vai atender.','ok');
+    }catch(err){ppMsg452(err.message||'Falha ao salvar o lead.','warn')}
+  };
+  window.ppSaveAll452=async function(){
+    const maps=PP452.data?.results?.maps||[];if(!maps.length)return;
+    let ok=0,fail=0;
+    for(let i=0;i<maps.length;i++){
+      const key=maps[i].placeId||(maps[i].name+'|'+maps[i].address);
+      if(PP452.saved[key]){ok++;continue}
+      try{await ppSave452(i);if(PP452.saved[key])ok++;else fail++}catch{fail++}
+    }
+    ppMsg452(ok+' lead(s) salvo(s) no CRM'+(fail?' · '+fail+' falha(s)':''),'ok');
+  };
+  function prospectPage452(){
+    let h='<div class="hero"><div><div class="eyebrow">PROSPECÇÃO</div><h2>Encontrar novas oportunidades</h2><p>Busque empresas por segmento e região e salve os melhores contatos direto no CRM.</p></div></div>';
+    if(!isOwner452())return h+'<div class="card empty">Este recurso está disponível apenas para o perfil Proprietário do portal.</div>';
+    h+='<div class="card"><div class="pp452-form">'+
+      '<div class="field pp452-wide"><label>Segmento / tipo de empresa *</label><input id="pp452Seg" class="input" placeholder="Ex.: Construção civil"></div>'+
+      '<div class="field"><label>Bairro / região</label><select id="pp452Region" class="input" onchange="ppRegionChanged452()"><option value="">— Selecione —</option>'+PP452_REGIONS.map(function(r){return '<option>'+r.name+'</option>'}).join('')+'<option value="__custom__">Outra (digitar)</option></select><input id="pp452RegionCustom" class="input hidden" placeholder="Digite o bairro/região" style="margin-top:6px"></div>'+
+      '<div class="field"><label>Cidade</label><select id="pp452City" class="input" onchange="ppCityChanged452()"><option value="">— Selecione a região primeiro —</option></select><input id="pp452CityCustom" class="input hidden" placeholder="Digite a cidade" style="margin-top:6px"></div>'+
+      '<div class="field"><label>UF</label><input id="pp452State" class="input" maxlength="2" placeholder="RJ"></div>'+
+      '<div class="field"><label>Quantidade</label><select id="pp452Limit" class="input"><option>10</option><option selected>20</option><option>40</option></select></div>'+
+      '<div class="field pp452-wide"><label>Fontes</label><div style="display:flex;gap:12px;flex-wrap:wrap;padding-top:8px">'+
+        '<label><input type="checkbox" id="pp452Maps" checked> Google Maps</label>'+
+        '<label><input type="checkbox" id="pp452Google"> Google</label>'+
+        '<label><input type="checkbox" id="pp452Insta"> Instagram</label>'+
+        '<label><input type="checkbox" id="pp452Face"> Facebook</label>'+
+        '</div><div class="tiny muted" style="margin-top:6px">Instagram e Facebook: usamos busca com filtro por domínio oficial (compatível com contas gratuitas).</div></div>'+
+      '</div><button class="btn" style="margin-top:14px" onclick="ppRun452()">⌕ Prospectar agora</button></div>'+
+      '<div id="pp452Msg"></div><div id="pp452Results">'+(PP452.data&&PP452.data.ok?ppResults452():'')+'</div>';
+    return h;
+  }
+  window.prospectPage452=prospectPage452;
+  dashboard=function(){
+    let h=baseDashboard452();
+    if(!isOwner452())return h;
+    h+='<div class="card"><div class="card-head"><div><div class="eyebrow">PROSPECÇÃO</div><h3>Encontrar novas oportunidades</h3><p class="muted tiny">Busque empresas por segmento e região e salve os contatos no CRM.</p></div><button class="btn" onclick="goPortalPros452()">Abrir prospecção</button></div></div>';
+    return h;
+  };
+  render=function(){
+    ensureProsNav452();
+    if(P.page==='prospecting'){
+      nav();document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page==='prospecting'));
+      $('clientChip').textContent=P.data?.client?.name||'';
+      $('userChip').textContent=P.data?.user?.username+' · '+roleLabel(P.data?.user?.role);
+      $('main').innerHTML=prospectPage452();
+      return;
+    }
+    baseRender452();
+  };
+  setTimeout(()=>{try{ensureProsNav452()}catch{}},1700);
+})();</script></body>
+</html>

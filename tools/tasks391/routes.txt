@@ -1,0 +1,79 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/web/tasks'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<2)return json(res,403,{ok:false,error:'Perfil sem acesso a Tarefas e SLA.'});
+      const leadId=url.searchParams.get('leadId')?validId(url.searchParams.get('leadId'),180):'';
+      return json(res,200,await task391View(leadId));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/tasks'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para criar tarefas.'});
+      const out=await task391Save(await readBody(req),ss.username);
+      if(out.status<400)await audit('task_create',ss.username,req,'Tarefa criada');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/tasks'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para editar tarefas.'});
+      const out=await task391Save(await readBody(req),ss.username);
+      if(out.status<400)await audit('task_update',ss.username,req,'Tarefa atualizada');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/tasks/remove'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode excluir tarefas.'});
+      const out=await task391Remove(await readBody(req));
+      if(out.status<400)await audit('task_remove',ss.username,req,'Tarefa removida');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/tasks/checklist'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para alterar checklist.'});
+      const out=await task391ReplaceChecklist(await readBody(req));
+      if(out.status<400)await audit('task_checklist_update',ss.username,req,'Checklist de tarefa atualizado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/tasks/comment'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<2)return json(res,403,{ok:false,error:'Perfil sem permissao para comentar em tarefas.'});
+      try{
+        const body=await readBody(req);
+        await task391Comment({taskId:body.taskId,authorType:'Equipe',authorId:ss.userId||ss.username,authorName:ss.username,body:body.body,portalVisible:!!body.portalVisible});
+        await audit('task_comment',ss.username,req,'Comentario em tarefa');
+        return json(res,200,{ok:true,view:await task391View('')});
+      }catch(e){return json(res,400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/tasks/time'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<2)return json(res,403,{ok:false,error:'Perfil sem permissao para registrar tempo.'});
+      const out=await task391Time(await readBody(req),ss.username);
+      if(out.status<400)await audit('task_time_add',ss.username,req,'Tempo registrado em tarefa');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/tasks/from-ticket'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para criar tarefa a partir de chamado.'});
+      const out=await task391FromTicket(await readBody(req),ss.username);
+      if(out.status<400)await audit('task_from_ticket',ss.username,req,'Tarefa criada a partir de chamado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/task-sla-config'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode configurar SLA.'});
+      const out=await task391SaveConfig(await readBody(req),ss.username);
+      await audit('task_sla_config',ss.username,req,'Configuracao de SLA atualizada');
+      return json(res,200,out);
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/portal/tasks'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      return json(res,200,await task391PortalView(ps));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/tasks/comment'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      try{
+        const body=await readBody(req);
+        await task391Comment({taskId:body.taskId,leadId:ps.leadId,authorType:'Cliente',authorId:ps.userId,authorName:ps.username,body:body.body,portalVisible:true});
+        return json(res,200,{ok:true,view:await task391PortalView(ps)});
+      }catch(e){return json(res,400,{ok:false,error:String(e.message||e)})}
+    }

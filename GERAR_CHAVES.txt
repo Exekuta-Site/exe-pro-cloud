@@ -1,0 +1,12 @@
+EXE PRO 3.5.0
+
+Gere duas chaves diferentes, longas e aleatórias:
+
+1. EXE_CLOUD_KEY
+   Usada somente na sincronização Windows <-> Cloud.
+
+2. EXE_CLOUD_SECRET_KEY
+   Usada para criptografar chaves Google Places/Serper no PostgreSQL.
+   Não troque esta chave sem planejamento, pois ela protege os segredos já gravados.
+
+No pacote Windows existe GERAR_CHAVES_CLOUDWAYS.bat para gerar ambas.

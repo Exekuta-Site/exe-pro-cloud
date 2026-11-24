@@ -1,0 +1,26 @@
+
+/* EXE PRO 3.8.2 — Relatórios SEO / administração */
+.seo382-kpis{grid-template-columns:repeat(4,minmax(150px,1fr))}
+.seo382-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0}
+.seo382-toolbar select{min-width:280px;max-width:440px}
+.seo382-note{margin-bottom:14px}
+.seo382-table td{vertical-align:middle}
+.seo382-editor{padding-bottom:2px}
+.seo382-editor .cols4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.seo382-section{padding:14px;border:1px solid #303030;border-radius:14px;background:#101010;margin:12px 0}
+.seo382-section h3{margin:0 0 5px;font-size:14px}
+.seo382-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.seo382-key-head,.seo382-key-row{display:grid;grid-template-columns:1.1fr .45fr .55fr .55fr .55fr 1.4fr auto;gap:7px;align-items:center}
+.seo382-key-head{font-size:8px;font-weight:900;text-transform:uppercase;color:#8f969f;padding:0 2px 6px}
+.seo382-key-row{padding:6px 0;border-top:1px solid #262626}
+.seo382-key-row:first-child{border-top:0}
+.seo382-key-row .input{min-width:0}
+.seo382-editor-actions{justify-content:flex-end;margin-top:14px}
+.seo382-preview-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.seo382-preview ul{margin:8px 0 0;padding-left:18px}
+.seo382-preview li{margin:5px 0;font-size:10px}
+.seo382-check{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid #303030;border-radius:11px;background:#101010;margin:10px 0;font-size:10px;font-weight:800}
+.seo382-check input{width:16px;height:16px;accent-color:var(--accent)}
+@media(max-width:1050px){.seo382-editor .cols4,.seo382-preview-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.seo382-key-head,.seo382-key-row{grid-template-columns:1fr 1fr 1fr}.seo382-key-head{display:none}.seo382-key-row .sk-page{grid-column:1/-1}}
+@media(max-width:760px){.seo382-toolbar,.seo382-section-head{align-items:stretch;flex-direction:column}.seo382-toolbar select{max-width:none;width:100%}.seo382-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.seo382-table{min-width:980px}}
+@media(max-width:520px){.seo382-editor .cols4,.seo382-preview-kpis{grid-template-columns:1fr}.seo382-key-row{grid-template-columns:1fr}}

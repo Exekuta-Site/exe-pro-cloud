@@ -1,0 +1,16 @@
+
+/* EXE PRO 3.8.3 — Aprovações Portal */
+.d383-kpis{grid-template-columns:repeat(4,minmax(150px,1fr))}
+.d383-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0}
+.d383-toolbar select{min-width:280px;max-width:440px}
+.d383-note{margin-bottom:14px}
+.d383-table td{vertical-align:middle}
+.d383-preview-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.d383-items{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.d383-items>div{padding:9px 10px;border:1px solid #2b2b2b;border-radius:10px;background:#111}
+.d383-items b{display:block;font-size:10px}.d383-items span{display:block;color:#777;font-size:8px;margin-top:3px}
+.d383-decision-card{border-color:color-mix(in srgb,var(--accent) 25%,#303030)}
+.d383-client-card{margin-top:16px}.d383-client-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.d383-client-stats{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.d383-client-stats span{font-size:9px;padding:6px 8px;border:1px solid #303030;border-radius:999px;background:#141414}
+@media(max-width:900px){.d383-kpis,.d383-preview-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.d383-toolbar{align-items:stretch;flex-direction:column}.d383-toolbar select{max-width:none;width:100%}.d383-table{min-width:980px}}
+@media(max-width:600px){.d383-kpis,.d383-preview-kpis{grid-template-columns:1fr 1fr}.d383-client-head{flex-direction:column}}

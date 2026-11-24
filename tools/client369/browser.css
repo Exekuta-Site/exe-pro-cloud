@@ -1,0 +1,35 @@
+
+/* EXE PRO 3.6.9 — Clientes: editar/excluir + mensalidade */
+.client-toolbar369{display:flex;align-items:center;gap:10px;margin:14px 0}
+.client-toolbar369 .input{max-width:460px}
+.client-table369 td{vertical-align:middle}
+.client-monthly369{font-size:13px;color:#fff}
+.client-actions369{flex-wrap:nowrap}
+.danger369{border-color:#5b2b31!important;color:#ff9aa3!important;background:#1a1112!important}
+.danger369:hover{border-color:#9b414d!important;background:#251416!important}
+.client-finance-hint369{margin-bottom:12px}
+.client-edit369 .client-finance368{border-color:color-mix(in srgb,var(--accent) 22%,#303030)}
+@media(max-width:980px){
+  .client-actions369{flex-wrap:wrap}
+  .client-table369{min-width:900px}
+}
+@media(max-width:680px){
+  .client-toolbar369{align-items:stretch;flex-direction:column}
+  .client-toolbar369 .input{max-width:none}
+}
+
+/* EXE PRO 3.7.1 — serviços por site e valor */
+.client-service-pricing371{border:1px solid #303030;border-radius:14px;background:#101010;padding:14px}
+.client-service-pricing-head371{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:12px}
+.client-service-pricing-head371 h3{margin:0 0 4px;font-size:14px}
+.client-service-price-row371{display:grid;grid-template-columns:1.2fr 1.35fr .7fr .8fr .55fr .7fr auto;gap:8px;align-items:end;padding:10px 0;border-top:1px solid #292929}
+.client-service-price-row371:first-child{border-top:0;padding-top:0}
+.client-service-price-row371 .field{margin:0;min-width:0}
+.client-service-price-row371 .field label{font-size:8px}
+.client-service-price-row371 .sp371-remove{margin-bottom:1px}
+.client-service-totals371{display:flex;justify-content:flex-end;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid #292929}
+.client-service-totals371>div{min-width:155px;padding:10px 12px;border:1px solid #2d2d2d;border-radius:11px;background:#151515}
+.client-service-totals371 span{display:block;font-size:8px;font-weight:800;color:#8f969f;text-transform:uppercase;letter-spacing:.08em}
+.client-service-totals371 b{display:block;font-size:15px;margin-top:3px}
+@media(max-width:1180px){.client-service-price-row371{grid-template-columns:repeat(3,minmax(0,1fr))}.client-service-price-row371 .sp371-remove{align-self:end}}
+@media(max-width:720px){.client-service-pricing-head371{flex-direction:column}.client-service-price-row371{grid-template-columns:1fr}.client-service-totals371{flex-direction:column}.client-service-totals371>div{min-width:0}}

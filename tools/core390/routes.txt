@@ -1,0 +1,43 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/web/core-status'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para diagnostico do Core.'});
+      return json(res,200,await coreStatus());
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/core-jobs/run'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode executar jobs do Core.'});
+      const body=await readBody(req),jobKey=String(body.jobKey||'').trim();
+      if(!['notifications','wordpress','billing'].includes(jobKey))return json(res,400,{ok:false,error:'Job do Core invalido.'});
+      try{
+        const ttl=jobKey==='billing'?20*60*1000:14*60*1000;
+        const out=await coreRunScheduled(jobKey,ttl,true,ss.username);
+        await audit('core_job_run',ss.username,req,'Execucao manual do job '+jobKey);
+        return json(res,200,{ok:true,...out,status:await coreStatus()});
+      }catch(e){return json(res,500,{ok:false,error:String(e.message||e),status:await coreStatus()})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/core-cleanup'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(!isMaster(ss))return json(res,403,{ok:false,error:'Somente Super Admin pode executar limpeza do Core.'});
+      const result=await coreCleanup(ss.username);
+      await coreEvent('info','maintenance','Limpeza de Core executada',result);
+      await audit('core_cleanup',ss.username,req,'Limpeza de sessoes expiradas e historico tecnico antigo');
+      return json(res,200,{...result,status:await coreStatus()});
+    }
+    if(req.method==='GET'&&url.pathname==='/api/web/core-diagnostics'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para diagnostico do Core.'});
+      const data=await coreStatus();
+      if(url.searchParams.get('download')==='1'){
+        const body=Buffer.from(JSON.stringify(data,null,2),'utf8');
+        res.writeHead(200,{
+          'content-type':'application/json; charset=utf-8',
+          'content-length':body.length,
+          'content-disposition':'attachment; filename="EXE_PRO_Core_Diagnostics_3.9.0.json"',
+          'cache-control':'no-store',
+          'x-content-type-options':'nosniff'
+        });
+        return res.end(body);
+      }
+      return json(res,200,data);
+    }

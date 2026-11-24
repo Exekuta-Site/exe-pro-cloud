@@ -1,0 +1,47 @@
+
+/* EXE PRO 3.7.0 — WordPress Client Control */
+.wp370-kpis{grid-template-columns:repeat(5,minmax(150px,1fr))}
+.wp370-config{margin-bottom:16px}
+.wp370-config-head,.wp370-client-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:12px}
+.wp370-check{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid #303030;border-radius:11px;background:#101010;margin-top:8px;font-size:10px;font-weight:800;cursor:pointer}
+.wp370-check:hover{border-color:color-mix(in srgb,var(--accent) 38%,#303030)}
+.wp370-check input{width:16px;height:16px;accent-color:var(--accent)}
+.wp370-contract{border-color:#5c511f;background:#17150d}
+.wp370-legal{margin:14px 0}
+.wp370-table td{vertical-align:top}
+.wp370-table a{color:var(--accent);font-weight:800;text-decoration:none}
+.wp370-table a:hover{text-decoration:underline}
+.wp370-overdue{color:#ff9e7a}
+.wp370-suspended{border-color:#71343a!important;color:#ff9ba5!important;background:#1d1113!important}
+.wp370-error{color:#ff8e98;max-width:260px;line-height:1.35;margin-top:5px}
+.wp370-actions{flex-wrap:wrap;min-width:220px}
+.wp370-suspend-btn{border-color:#6c4b20!important;color:#ffc86b!important;background:#19140d!important}
+.wp370-modal .wide,.wp370-config .wide{grid-column:1/-1}
+.wp370-client-card{margin-top:16px}
+.wp370-client-site{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid #292929}
+.wp370-client-site:first-of-type{border-top:0}
+@media(max-width:1180px){.wp370-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:800px){
+  .wp370-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wp370-config-head,.wp370-client-head{flex-direction:column}
+  .wp370-table{min-width:980px}
+  .wp370-client-site{grid-template-columns:1fr}
+}
+@media(max-width:480px){.wp370-kpis{grid-template-columns:1fr 1fr}}
+
+/* EXE PRO 3.7.1 — designer 3 modelos */
+.wp371-designer-block{margin:16px 0;padding:14px;border:1px solid #303030;border-radius:14px;background:#0f1012}
+.wp371-designer-block h3{margin:3px 0 5px}
+.wp371-template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.wp371-template-card{border:1px solid #303030;border-radius:14px;background:#121212;overflow:hidden}
+.wp371-mini{min-height:150px;padding:18px;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;justify-content:center}
+.wp371-mini span{font-size:7px;font-weight:900;letter-spacing:.12em;color:var(--a);text-transform:uppercase}
+.wp371-mini b{font-size:19px;line-height:1.05;margin-top:9px}
+.wp371-mini small{opacity:.7;margin-top:6px;line-height:1.4}
+.wp371-mini i{display:block;height:7px;border-radius:999px;background:color-mix(in srgb,var(--a) 18%,#222);margin-top:18px;overflow:hidden}
+.wp371-mini i em{display:block;height:100%;background:var(--a);border-radius:999px}
+.wp371-mini.financial{border-top:3px solid var(--a)}
+.wp371-mini.premium{background:linear-gradient(135deg,var(--bg),color-mix(in srgb,var(--a) 14%,var(--bg)))}
+.wp371-template-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px}
+.wp371-designer-modal input[type=color]{height:42px;padding:4px}
+@media(max-width:900px){.wp371-template-grid{grid-template-columns:1fr}}

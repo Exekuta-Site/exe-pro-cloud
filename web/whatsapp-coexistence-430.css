@@ -1,0 +1,13 @@
+
+.wa430-card{margin:14px 0;border:1px solid #3b6d9a;background:#101d2b;color:#e6f2ff}
+.wa430-card h3{margin:0 0 6px}
+.wa430-card p{margin:0;line-height:1.45}
+.wa430-eyebrow{color:#91c7f2;font-size:11px;font-weight:800;letter-spacing:.08em}
+.wa430-status{margin-top:12px;padding:10px 12px;border-radius:10px;border:1px solid #31516d;background:#0e1823}
+.wa430-status.ok{border-color:#2c8b61;background:#10261d;color:#d8ffe9}
+.wa430-status.warn{border-color:#8c742f;background:#28220f;color:#fff0b8}
+.wa430-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.wa430-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.wa430-help{margin-top:7px!important;color:#9faaa6;font-size:11px;line-height:1.45!important}
+.wa430-detail{margin-top:8px;color:#c6d7e6;font-size:12px;overflow-wrap:anywhere}
+@media(max-width:900px){.wa430-grid{grid-template-columns:1fr}}

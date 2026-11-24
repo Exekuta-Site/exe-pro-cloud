@@ -1,0 +1,30 @@
+
+/* EXE PRO 3.8.2 — Relatórios SEO no Portal */
+.seo382p-dashboard{margin-top:14px}
+.seo382p-mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.seo382p-mini>div,.seo382p-card-metrics>div,.seo382p-speed>div,.seo382p-local>div{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.seo382p-mini span,.seo382p-card-metrics span,.seo382p-speed span,.seo382p-local span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
+.seo382p-mini b,.seo382p-card-metrics b,.seo382p-speed b,.seo382p-local b{display:block;font-size:18px;margin-top:5px}
+.seo382p-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seo382p-card{display:flex;flex-direction:column;gap:12px}
+.seo382p-card-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.seo382p-card .btn{margin-top:auto}
+.seo382p-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.seo382p-speed{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.seo382p-speed small{display:block;margin-top:3px;color:var(--muted)}
+.seo382p-list{margin:10px 0 0;padding-left:18px}.seo382p-list li{margin:7px 0;font-size:11px;line-height:1.45}
+.seo382p-table{min-width:900px}.seo382p-up{color:var(--ok);font-weight:900}
+.seo382p-local{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+@media(max-width:1050px){.seo382p-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.seo382p-mini,.seo382p-kpis,.seo382p-local{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.seo382p-grid{grid-template-columns:1fr}.seo382p-mini,.seo382p-kpis,.seo382p-local{grid-template-columns:1fr 1fr}.seo382p-report-head{align-items:flex-start}}
+@media print{
+  body{background:#fff!important;color:#111!important}
+  .topbar,.sidebar,.seo382p-report-head .support{display:none!important}
+  .shell{display:block!important}.main{padding:0!important;max-width:none!important}
+  .card,.kpi,.table-wrap,.seo382p-mini>div,.seo382p-speed>div,.seo382p-local>div{background:#fff!important;color:#111!important;border-color:#ccc!important;box-shadow:none!important}
+  .muted,.tiny,.kpi span,.kpi small,.seo382p-speed small{color:#555!important}
+  .seo382p-print{padding:8mm}
+  .seo382p-print .card,.seo382p-print .kpi{break-inside:avoid}
+  .table{color:#111!important}.table th,.table td{border-color:#ddd!important}
+  .eyebrow{color:#333!important}
+}

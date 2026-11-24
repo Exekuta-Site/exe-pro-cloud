@@ -1,0 +1,50 @@
+
+    if(req.method==='GET'&&((url.pathname==='/portal')||(url.pathname==='/portal/')||(url.pathname==='/portal/index.html')||((String(req.headers.host||'').split(':')[0].toLowerCase()==='portal.exekuta.com.br')&&url.pathname==='/'))){
+      try{
+        const file=require('node:fs').readFileSync(require('node:path').join(__dirname,'web','portal.html'));
+        res.writeHead(200,{'content-type':'text/html; charset=utf-8','content-length':file.length,'cache-control':'no-store','x-content-type-options':'nosniff','referrer-policy':'strict-origin-when-cross-origin'});
+        return res.end(file);
+      }catch{return json(res,404,{ok:false,error:'Portal do Cliente nao encontrado.'})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/login'){
+      return portalLogin(req,res,await readBody(req));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/logout'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      return portalLogout(req,res);
+    }
+    if(req.method==='GET'&&url.pathname==='/api/portal/session'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      return json(res,200,{ok:true,csrf:ps.csrf,user:{username:ps.username,role:ps.role,leadId:ps.leadId}});
+    }
+    if(req.method==='GET'&&url.pathname==='/api/portal/dashboard'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      try{return json(res,200,await portalDashboard(ps))}
+      catch(e){return json(res,500,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='GET'&&url.pathname==='/api/web/client-portal/users'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode gerenciar acessos do Portal do Cliente.'});
+      return json(res,200,await portalAdminList());
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/client-portal/users'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode criar acessos do Portal do Cliente.'});
+      const out=await portalAdminCreate(await readBody(req),ss);
+      if(out.status<400)await audit('client_portal_user_create',ss.username,req,'Acesso do Portal do Cliente criado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/client-portal/users'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode editar acessos do Portal do Cliente.'});
+      const out=await portalAdminPatch(await readBody(req));
+      if(out.status<400)await audit('client_portal_user_update',ss.username,req,'Acesso do Portal do Cliente atualizado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/client-portal/users/remove'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode remover acessos do Portal do Cliente.'});
+      const out=await portalAdminRemove(await readBody(req));
+      if(out.status<400)await audit('client_portal_user_remove',ss.username,req,'Acesso do Portal do Cliente removido');
+      return json(res,out.status,out.body);
+    }

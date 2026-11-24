@@ -1,0 +1,32 @@
+name: EXE PRO 4 Build Validation
+
+on:
+  push:
+    branches:
+      - develop-exe-pro-4
+      - develop-exe-pro-4.1.4-routing
+  pull_request:
+    branches:
+      - develop-exe-pro-4
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run build validation
+        run: npm run build

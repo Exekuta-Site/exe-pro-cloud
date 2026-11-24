@@ -1,0 +1,45 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/whatsapp/webhook')return whatsapp420WebhookVerify(url,res);
+    if(req.method==='POST'&&url.pathname==='/api/whatsapp/webhook')return whatsapp420WebhookReceive(req,res);
+    if(req.method==='GET'&&url.pathname==='/api/web/whatsapp/config'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      return json(res,200,{ok:true,config:await whatsapp420PublicConfig()});
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/whatsapp/config'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(!isMaster(ss))return json(res,403,{ok:false,error:'Somente Super Admin pode configurar o WhatsApp Business.'});
+      const config=await whatsapp420ConfigUpdate(await readBody(req),ss.username);
+      await audit('whatsapp_business_config_update',ss.username,req,'Configuração oficial do WhatsApp Business atualizada');
+      return json(res,200,{ok:true,config});
+    }
+    if(req.method==='GET'&&url.pathname==='/api/web/whatsapp/conversations'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      return json(res,200,await whatsapp420View(url));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/whatsapp/conversations'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissão para abrir conversas.'});
+      const conversation=await whatsapp420CreateConversation(await readBody(req));
+      await audit('whatsapp_business_conversation_create',ss.username,req,'Conversa criada: '+conversation.conversationId);
+      return json(res,200,{ok:true,conversation});
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/whatsapp/messages'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissão para enviar mensagens.'});
+      const out=await whatsapp420SendText(await readBody(req),ss.username);
+      await audit('whatsapp_business_message_send',ss.username,req,'Mensagem enviada: '+out.providerMessageId);
+      return json(res,200,{ok:true,...out});
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/whatsapp/clear-failed'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissão para limpar mensagens.'});
+      const deleted=await whatsapp420ClearFailed(await readBody(req));
+      await audit('whatsapp_business_failed_messages_clear',ss.username,req,'Mensagens com falha removidas: '+deleted);
+      return json(res,200,{ok:true,deleted});
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/whatsapp/read'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      const id=validId((await readBody(req)).conversationId,180);if(!id)return json(res,400,{ok:false,error:'Conversa não informada.'});
+      await pool.query('UPDATE whatsapp_conversations SET unread_count=0,updated_at=$1 WHERE conversation_id=$2',[nowIso(),id]);
+      return json(res,200,{ok:true});
+    }

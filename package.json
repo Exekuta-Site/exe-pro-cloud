@@ -1,0 +1,20 @@
+{
+  "name": "exe-pro-cloudways",
+  "version": "4.4.0",
+  "private": true,
+  "description": "EXE PRO Cloud Full para Cloudways Velocity + PostgreSQL",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "node tools/materialize.js && node tools/root-url-patch.js && node tools/apply-production-36.js && node tools/apply-visual-parity-361.js && node tools/apply-visual-refinement-362.js && node tools/apply-master-panel-363.js && node tools/apply-prospect-parity-364.js && node tools/apply-prospect-intelligence-365.js && node tools/apply-central-commercial-366.js && node tools/apply-notifications-367.js && node tools/apply-client-parity-368.js && node tools/apply-client-fix-369.js && node tools/apply-wordpress-control-370.js && node tools/apply-service-wp-designer-371.js && node tools/apply-client-portal-380.js && node tools/apply-portal-operations-381.js && node tools/apply-seo-reports-382.js && node tools/apply-portal-docs-383.js && node tools/apply-recurring-finance-384.js && node tools/apply-core-stability-390.js && node tools/apply-tasks-team-sla-391.js && node tools/apply-automation-400.js && node tools/apply-routing-414.js && node tools/apply-whatsapp-web-415.js && node tools/apply-whatsapp-business-420.js && node tools/apply-whatsapp-coexistence-430.js && node tools/apply-site-integration-440.js && node tools/apply-url-hardening-445.js && node tools/apply-perf-security-450.js && node tools/apply-portal-prospecting-451.js && node tools/connector-intake-460.js && node tools/apply-wp-popup-460.js && node tools/build-check.js",
+    "start": "node server.js",
+    "migrate": "node tools/migrate.js",
+    "db:test": "node tools/test-db.js",
+    "hash-password": "node tools/hash-password.js",
+    "import:sqlite": "node tools/import-sqlite.js"
+  },
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}

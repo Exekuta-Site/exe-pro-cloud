@@ -1,0 +1,119 @@
+{
+  "version": "4.4.0",
+  "modules": [
+    {
+      "key": "crm",
+      "name": "CRM / Sync Core",
+      "version": "3.6.9",
+      "marker": "webDeleteEntity",
+      "critical": true
+    },
+    {
+      "key": "notifications",
+      "name": "Notificações",
+      "version": "3.6.7",
+      "marker": "NOTIFY_DEFAULT",
+      "critical": true
+    },
+    {
+      "key": "wordpress",
+      "name": "WordPress Client Control",
+      "version": "3.7.1",
+      "marker": "WP_CTRL_DEFAULT",
+      "critical": true
+    },
+    {
+      "key": "portal",
+      "name": "Portal do Cliente",
+      "version": "3.8.3",
+      "marker": "PORTAL_DOC_TYPES",
+      "critical": true
+    },
+    {
+      "key": "seo",
+      "name": "Relatórios SEO",
+      "version": "3.8.2",
+      "marker": "SEO_REPORT_STATUS",
+      "critical": false
+    },
+    {
+      "key": "billing",
+      "name": "Financeiro Recorrente",
+      "version": "3.8.4",
+      "marker": "BILLING_PROFILE_DEFAULT",
+      "critical": true
+    },
+    {
+      "key": "tasks",
+      "name": "Tarefas, Equipe e SLA",
+      "version": "3.9.1",
+      "marker": "TASK391_STATUS",
+      "critical": true
+    },
+    {
+      "key": "whatsapp-business",
+      "name": "WhatsApp Business Central de Conversas",
+      "version": "4.3.0",
+      "marker": "WHATSAPP_BUSINESS_420",
+      "critical": true
+    },
+    {
+      "key": "whatsapp-coexistence",
+      "name": "WhatsApp Business Coexistência Oficial por QR Code",
+      "version": "4.3.0",
+      "marker": "WHATSAPP_COEXISTENCE_430",
+      "critical": false
+    },
+    {
+      "key": "site-leads",
+      "name": "Leads do site EXEKUTA",
+      "version": "4.4.0",
+      "marker": "EXE_PRO_SITE_LEADS_440",
+      "critical": false
+    }
+  ],
+  "requiredTables": [
+    "entities",
+    "changes",
+    "cloud_users",
+    "notification_outbox",
+    "wordpress_sites",
+    "portal_users",
+    "portal_tickets",
+    "portal_files",
+    "portal_documents",
+    "portal_document_decisions",
+    "seo_reports",
+    "billing_profiles",
+    "billing_invoices",
+    "billing_payments",
+    "core_schema_versions",
+    "core_job_locks",
+    "core_job_runs",
+    "core_runtime_events",
+    "task_items",
+    "task_checklist",
+    "task_comments",
+    "task_time_logs",
+    "whatsapp_conversations",
+    "whatsapp_messages",
+    "whatsapp_onboarding_states"
+  ],
+  "schedulers": [
+    {
+      "key": "notifications",
+      "label": "Notificações financeiras",
+      "intervalMinutes": 15
+    },
+    {
+      "key": "wordpress",
+      "label": "WordPress Control",
+      "intervalMinutes": 15
+    },
+    {
+      "key": "billing",
+      "label": "Financeiro recorrente",
+      "intervalMinutes": 360
+    }
+  ]
+}

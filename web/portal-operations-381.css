@@ -1,0 +1,27 @@
+
+/* EXE PRO 3.8.1 — Portal Operacional */
+.op381-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:#07110f;font-size:8px;font-weight:950;margin-left:6px}
+.op381-dashboard{margin-top:14px}
+.op381-mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.op381-mini-grid>div{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.op381-mini-grid span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.op381-mini-grid b{display:block;font-size:19px;margin-top:6px}.op381-mini-grid .op381-date{font-size:12px}
+.op381-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.op381-ticket-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.op381-ticket{margin:0}.op381-ticket p{font-size:11px}.op381-ticket-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.op381-file-note{margin-bottom:14px}.op381-file .btn{text-decoration:none;display:inline-flex}
+.op381-proof-card{margin-top:14px}
+.op381-timeline{padding:8px 18px}.op381-event{position:relative;display:grid;grid-template-columns:16px minmax(0,1fr);gap:10px;padding:13px 0;border-top:1px solid var(--line)}
+.op381-event:first-child{border-top:0}.op381-event b{font-size:12px}.op381-event p{margin:4px 0 0;font-size:10px}.op381-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 13%,transparent);margin-top:4px}
+.op381-modal-back{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:18px;backdrop-filter:blur(5px)}
+.op381-modal{position:relative;width:min(650px,100%);max-height:90vh;overflow:auto;background:#111318;border:1px solid #313640;border-radius:18px;padding:20px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.op381-modal.large{width:min(820px,100%)}.op381-modal h3{margin:6px 0 12px;font-size:20px}.op381-x{position:absolute;right:12px;top:12px;width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:#171a20;color:#fff;font-size:19px}
+.op381-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.op381-form-grid .wide{grid-column:1/-1}
+.op381-modal textarea,.op381-modal select{width:100%;border:1px solid var(--line);background:#0c0e12;color:var(--text);border-radius:11px;padding:11px 12px;outline:none}
+.op381-modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.op381-conversation{display:flex;flex-direction:column;gap:8px;max-height:350px;overflow:auto;padding:8px 2px 12px}
+.op381-msg{max-width:84%;padding:10px 12px;border-radius:12px;background:#181b21;border:1px solid #2c313a}.op381-msg.client{align-self:flex-end;background:color-mix(in srgb,var(--accent) 12%,#16191e);border-color:color-mix(in srgb,var(--accent) 32%,#30343b)}.op381-msg.team{align-self:flex-start}
+.op381-msg p{margin:4px 0 0;font-size:11px;white-space:pre-wrap}
+.op381-attachments{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 12px}.op381-attach{font-size:9px;text-decoration:none;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#15181e}
+@media(max-width:900px){.op381-ticket-list{grid-template-columns:1fr}.op381-mini-grid,.op381-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.op381-form-grid{grid-template-columns:1fr}.op381-form-grid .wide{grid-column:1}.op381-ticket-foot{align-items:flex-start;flex-direction:column}.op381-mini-grid{grid-template-columns:1fr 1fr}.op381-msg{max-width:95%}}

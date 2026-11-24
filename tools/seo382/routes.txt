@@ -1,0 +1,57 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/web/seo-reports'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para relatorios SEO.'});
+      const leadId=url.searchParams.get('leadId')?validId(url.searchParams.get('leadId'),180):'';
+      const reportId=url.searchParams.get('reportId')?validId(url.searchParams.get('reportId'),180):'';
+      if(reportId){
+        const report=await seoReportOne(reportId);
+        if(!report)return json(res,404,{ok:false,error:'Relatorio SEO nao encontrado.'});
+        return json(res,200,{ok:true,report,pageSpeed:await seoPageSpeedLatest(report.leadId),config:await seoConfigView()});
+      }
+      return json(res,200,{ok:true,reports:await seoReportsList(leadId),config:await seoConfigView()});
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/seo-reports'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para criar relatorios SEO.'});
+      const out=await seoReportSave(await readBody(req),ss.username);
+      if(out.status<400)await audit('seo_report_create',ss.username,req,'Relatorio SEO criado/atualizado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/seo-reports'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para editar relatorios SEO.'});
+      const out=await seoReportSave(await readBody(req),ss.username);
+      if(out.status<400)await audit('seo_report_update',ss.username,req,'Relatorio SEO atualizado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/seo-reports/remove'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode excluir relatorios SEO.'});
+      const out=await seoReportRemove(await readBody(req));
+      if(out.status<400)await audit('seo_report_remove',ss.username,req,'Relatorio SEO removido');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/seo/pagespeed'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para testar PageSpeed.'});
+      try{
+        const out=await seoPageSpeedRun(await readBody(req),ss.username);
+        await audit('seo_pagespeed_run',ss.username,req,'PageSpeed executado');
+        return json(res,200,out);
+      }catch(e){return json(res,e.statusCode||502,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/seo/config'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(!isMaster(ss))return json(res,403,{ok:false,error:'Somente Super Admin pode configurar a chave PageSpeed.'});
+      const body=await readBody(req),key=String(body.pageSpeedApiKey||'').trim();
+      if(key)await setSecret('googlePageSpeedApiKey',key);
+      if(body.clearPageSpeedApiKey===true)await pool.query('DELETE FROM cloud_secrets WHERE secret_key=$1',['googlePageSpeedApiKey']);
+      await audit('seo_config_update',ss.username,req,'Configuracao SEO/PageSpeed atualizada');
+      return json(res,200,await seoConfigView());
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/portal/seo-reports'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      return json(res,200,await seoPortalReports(ps));
+    }

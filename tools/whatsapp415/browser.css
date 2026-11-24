@@ -1,0 +1,28 @@
+/* EXE_PRO_415_WHATSAPP_WEB */
+.whatsapp-web-415-banner{
+  margin:0 0 14px;
+  border-color:#245f42;
+  background:linear-gradient(135deg,#121b16,#101010 72%);
+}
+.whatsapp-web-415-banner h3{
+  margin:5px 0 6px;
+}
+.whatsapp-web-415-banner .help{
+  max-width:780px;
+  line-height:1.55;
+}
+.whatsapp-web-415-banner .actions{
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.whatsapp-web-415-banner .tiny{
+  color:#8eb49b;
+  margin-left:2px;
+}
+@media(max-width:700px){
+  .whatsapp-web-415-banner .tiny{
+    width:100%;
+    margin-top:2px;
+  }
+}

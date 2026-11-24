@@ -1,0 +1,46 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/web/notifications'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      return json(res,200,await notificationView(url.searchParams.get('limit')||250));
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/notification-config'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(!isMaster(ss))return json(res,403,{ok:false,error:'Somente Super Admin pode configurar canais e regua de cobranca.'});
+      const body=await readBody(req),current=await getNotifyConfig();
+      const safe={...body};delete safe.whatsappAccessToken;delete safe.telegramBotToken;
+      const next=normalizeNotifyConfig({...current,...safe});
+      if(String(body.whatsappAccessToken||'').trim())await setSecret('whatsappAccessToken',body.whatsappAccessToken);
+      if(String(body.telegramBotToken||'').trim())await setSecret('telegramBotToken',body.telegramBotToken);
+      await saveSetting('notification_config',next,ss.username);
+      await audit('notification_config_update',ss.username,req,'Canais e regua de cobranca atualizados');
+      return json(res,200,await notificationView(250));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/notifications/plan'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para planejar cobrancas.'});
+      const out=await notificationPlan();
+      await audit('notification_plan',ss.username,req,'Planejamento de notificacoes');
+      return json(res,200,{ok:true,...out});
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/notifications/send'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para enviar cobrancas.'});
+      const out=await notificationSend(await readBody(req));
+      await audit('notification_send',ss.username,req,'Envio manual de notificacoes');
+      return json(res,200,out);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/notifications/cancel'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para cancelar notificacoes.'});
+      const body=await readBody(req),id=String(body.notificationId||'').trim();
+      if(!id)return json(res,400,{ok:false,error:'Informe a notificacao.'});
+      const q=await pool.query("UPDATE notification_outbox SET status='Cancelado',updated_at=$1 WHERE notification_id=$2 AND status IN ('Pendente','Falhou')",[nowIso(),id]);
+      return json(res,200,{ok:true,cancelled:q.rowCount});
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/telegram/sync'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para vincular Telegram.'});
+      const out=await syncTelegramContacts();
+      await audit('telegram_sync',ss.username,req,'Vinculos Telegram atualizados: '+out.linked);
+      return json(res,200,out);
+    }

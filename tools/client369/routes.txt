@@ -1,0 +1,7 @@
+
+    if(req.method==='POST'&&url.pathname==='/api/web/entity/delete'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      const out=await webDeleteEntity(await readBody(req),ss);
+      if(out.status<400)await audit('entity_delete',ss.username,req,'Exclusao Cloud sincronizada');
+      return json(res,out.status,out.body);
+    }

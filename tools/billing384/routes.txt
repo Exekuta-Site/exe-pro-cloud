@@ -1,0 +1,42 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/web/billing-recurring'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para Financeiro Recorrente.'});
+      const leadId=url.searchParams.get('leadId')?validId(url.searchParams.get('leadId'),180):'';
+      return json(res,200,await billingView(leadId));
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/billing-recurring/profile'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para configurar recorrencia.'});
+      const out=await billingSaveProfile(await readBody(req),ss.username);
+      if(out.status<400)await audit('billing_profile_update',ss.username,req,'Perfil financeiro recorrente atualizado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/billing-recurring/generate'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para gerar cobrancas recorrentes.'});
+      try{
+        const out=await billingGenerate(await readBody(req),ss.username,false);
+        await audit('billing_generate',ss.username,req,'Geracao recorrente '+out.period+': '+out.created+' cobranca(s)');
+        return json(res,200,{...out,view:await billingView('')});
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/billing-recurring/payment'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para registrar pagamento.'});
+      const out=await billingRecordPayment(await readBody(req),ss.username);
+      if(out.status<400)await audit('billing_payment_add',ss.username,req,'Pagamento recorrente registrado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/billing-recurring/payment/remove'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode excluir pagamentos.'});
+      const out=await billingRemovePayment(await readBody(req),ss.username);
+      if(out.status<400)await audit('billing_payment_remove',ss.username,req,'Pagamento recorrente removido');
+      return json(res,out.status,out.body);
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/portal/billing'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      return json(res,200,await billingPortalView(ps));
+    }

@@ -1,0 +1,33 @@
+
+    if(req.method==='GET'&&url.pathname==='/api/web/client-portal/documents'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para Propostas e Contratos do Portal.'});
+      const leadId=url.searchParams.get('leadId')?validId(url.searchParams.get('leadId'),180):'';
+      return json(res,200,{ok:true,documents:await portalDocAdminCandidates(leadId)});
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/client-portal/documents/publish'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para publicar documentos no Portal.'});
+      const out=await portalDocPublish(await readBody(req),ss.username);
+      if(out.status<400)await audit('portal_document_publish',ss.username,req,'Publicacao de proposta/contrato no Portal');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/client-portal/documents/reopen'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<3)return json(res,403,{ok:false,error:'Perfil sem permissao para reenviar documentos ao Portal.'});
+      const out=await portalDocAdminDecisionReset(await readBody(req),ss.username);
+      if(out.status<400)await audit('portal_document_reopen',ss.username,req,'Documento reenviado para nova decisao');
+      return json(res,out.status,out.body);
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/portal/documents'){
+      const ps=await portalAuth(req,res,false);if(!ps)return;
+      return json(res,200,await portalDocsForClient(ps));
+    }
+    if(req.method==='POST'&&url.pathname==='/api/portal/documents/decision'){
+      const ps=await portalAuth(req,res,true);if(!ps)return;
+      try{
+        const out=await portalDocDecision(req,ps,await readBody(req));
+        return json(res,200,out);
+      }catch(e){return json(res,e.statusCode||400,{ok:false,error:String(e.message||e)})}
+    }

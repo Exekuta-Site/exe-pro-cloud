@@ -1,0 +1,68 @@
+    if(req.method==='GET'&&url.pathname==='/downloads/exe-pro-connector-v1.1.0.zip'){
+      try{
+        const file=require('node:fs').readFileSync(require('node:path').join(__dirname,'web','downloads','exe-pro-connector-v1.1.0.zip'));
+        res.writeHead(200,{'content-type':'application/zip','content-length':file.length,'content-disposition':'attachment; filename="EXE_PRO_Connector_WordPress_v1.1.0.zip"','cache-control':'public, max-age=3600','x-content-type-options':'nosniff'});
+        return res.end(file);
+      }catch{return json(res,404,{ok:false,error:'Plugin WordPress 1.1 nao encontrado.'})}
+    }
+    if(req.method==='GET'&&url.pathname==='/downloads/exe-pro-connector-v1.0.0.zip'){
+      try{
+        const file=require('node:fs').readFileSync(require('node:path').join(__dirname,'web','downloads','exe-pro-connector-v1.0.0.zip'));
+        res.writeHead(200,{'content-type':'application/zip','content-length':file.length,'content-disposition':'attachment; filename="EXE_PRO_Connector_WordPress_v1.0.0.zip"','cache-control':'public, max-age=3600','x-content-type-options':'nosniff'});
+        return res.end(file);
+      }catch{return json(res,404,{ok:false,error:'Plugin WordPress nao encontrado.'})}
+    }
+
+    if(req.method==='GET'&&url.pathname==='/api/web/wordpress-control'){
+      const ss=await webAuth(req,res,false);if(!ss)return;
+      if(roleRank(ss.role)<2)return json(res,403,{ok:false,error:'Perfil sem acesso ao controle WordPress.'});
+      return json(res,200,await wpCtrlView());
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/wordpress-control/config'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(!isMaster(ss))return json(res,403,{ok:false,error:'Somente Super Admin pode configurar a automacao WordPress.'});
+      const body=await readBody(req),next=wpCtrlConfigNormalize({...await wpCtrlGetConfig(),...body});
+      await saveSetting('wordpress_control_config',next,ss.username);
+      await audit('wordpress_control_config',ss.username,req,'Configuracao WordPress atualizada');
+      return json(res,200,await wpCtrlView());
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/wordpress-sites'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode conectar sites WordPress.'});
+      const out=await wpCtrlCreate(await readBody(req),ss);
+      if(out.status<400)await audit('wordpress_site_create',ss.username,req,'Site WordPress conectado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='PATCH'&&url.pathname==='/api/web/wordpress-sites'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode editar sites WordPress.'});
+      const out=await wpCtrlPatch(await readBody(req),ss);
+      if(out.status<400)await audit('wordpress_site_update',ss.username,req,'Site WordPress atualizado');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/wordpress-sites/remove'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode remover sites WordPress.'});
+      const out=await wpCtrlRemove(await readBody(req));
+      if(out.status<400)await audit('wordpress_site_remove',ss.username,req,'Conexao WordPress removida');
+      return json(res,out.status,out.body);
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/wordpress-sites/action'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode controlar sites WordPress.'});
+      const body=await readBody(req),id=validId(body.siteId,180),action=String(body.action||'');
+      if(!id||!['status','suspend','resume'].includes(action))return json(res,400,{ok:false,error:'Acao WordPress invalida.'});
+      const site=await wpCtrlOne(id);if(!site)return json(res,404,{ok:false,error:'Site WordPress nao encontrado.'});
+      try{
+        if(action==='status')await wpCtrlStatus(site);else await wpCtrlAction(site,action,'manual',String(body.reason||'Acao manual pelo EXE PRO'));
+        await audit('wordpress_site_'+action,ss.username,req,'WordPress '+action+' '+site.site_url);
+        return json(res,200,await wpCtrlView());
+      }catch(e){return json(res,502,{ok:false,error:String(e.message||e),view:await wpCtrlView()})}
+    }
+    if(req.method==='POST'&&url.pathname==='/api/web/wordpress-control/evaluate'){
+      const ss=await webAuth(req,res,true);if(!ss)return;
+      if(roleRank(ss.role)<4)return json(res,403,{ok:false,error:'Somente Admin ou Super Admin pode avaliar a automacao WordPress.'});
+      const result=await wpCtrlEvaluate(true);
+      await audit('wordpress_control_evaluate',ss.username,req,'Avaliacao WordPress: '+JSON.stringify({suspended:result.suspended,resumed:result.resumed,failed:result.failed}));
+      return json(res,200,{...result,view:await wpCtrlView()});
+    }

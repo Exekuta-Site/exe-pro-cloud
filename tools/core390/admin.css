@@ -1,0 +1,26 @@
+
+/* EXE PRO 3.9.0 — Core Stability */
+.c390-kpis{grid-template-columns:repeat(7,minmax(125px,1fr))}
+.c390-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}
+.c390-overview{align-items:start}
+.c390-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.c390-list>div{padding:10px;border:1px solid #303030;border-radius:10px;background:#111}
+.c390-list span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#838991;font-weight:900}
+.c390-list b{display:block;margin-top:4px;font-size:11px;overflow-wrap:anywhere}
+.c390-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.c390-checks>div{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid #303030;border-radius:10px;background:#111;font-size:9px;font-weight:800}
+.c390-job-actions{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.c390-locks{margin:12px 0}
+.c390-table td{vertical-align:middle}
+.c390-modules{display:flex;flex-direction:column;gap:7px}
+.c390-modules>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border:1px solid #303030;border-radius:10px;background:#111}
+.c390-modules b{display:block;font-size:10px}.c390-modules span{display:block;font-size:8px;color:#858b93;margin-top:3px}
+.c390-tables{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.c390-tables span{font-size:8px;font-weight:850;padding:6px 8px;border-radius:999px;border:1px solid #303030;background:#111}
+.c390-tables span.ok{border-color:#2d654e;color:#6fd6a4}.c390-tables span.bad{border-color:#713640;color:#ff8e9d}
+.c390-events{padding:8px 16px}.c390-event{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;padding:11px 0;border-top:1px solid #282828}.c390-event:first-child{border-top:0}
+.c390-event b{font-size:10px}.c390-event p{margin:3px 0;font-size:10px}.c390-event small{font-size:8px;color:#7f858d}
+.bad-text{color:#ff818e!important}
+@media(max-width:1250px){.c390-kpis{grid-template-columns:repeat(4,minmax(130px,1fr))}}
+@media(max-width:850px){.c390-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.c390-list,.c390-checks{grid-template-columns:1fr}.c390-table{min-width:900px}}
+@media(max-width:520px){.c390-kpis{grid-template-columns:1fr}}

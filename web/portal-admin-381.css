@@ -1,0 +1,17 @@
+
+/* EXE PRO 3.8.1 — Atendimento Portal / administração */
+.a381-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+.a381-filter{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0}
+.a381-filter select{min-width:260px;max-width:420px}
+.a381-tabs{display:flex;gap:7px;flex-wrap:wrap}
+.a381-table td{vertical-align:middle}
+.a381-head-action{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin:14px 0}
+.a381-head-action h3{margin:0 0 4px}
+.a381-ticket-modal .wide{grid-column:1/-1}
+.a381-messages{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow:auto;margin:12px 0;padding:4px 0}
+.a381-msg{max-width:84%;border:1px solid #30343c;border-radius:11px;padding:9px 11px;background:#14171c}
+.a381-msg.client{align-self:flex-start}.a381-msg.team{align-self:flex-end;background:color-mix(in srgb,var(--accent) 12%,#14171c);border-color:color-mix(in srgb,var(--accent) 30%,#30343c)}
+.a381-msg p{margin:4px 0 0;font-size:10px;white-space:pre-wrap}
+.a381-client-card{margin-top:16px}.a381-client-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.a381-client-stats{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.a381-client-stats span{font-size:9px;padding:6px 8px;border:1px solid #303030;border-radius:999px;background:#141414}
+@media(max-width:900px){.a381-kpis{grid-template-columns:1fr 1fr}.a381-filter{align-items:stretch;flex-direction:column}.a381-filter select{max-width:none;width:100%}.a381-table{min-width:900px}}
+@media(max-width:620px){.a381-kpis{grid-template-columns:1fr}.a381-head-action,.a381-client-head{flex-direction:column}.a381-msg{max-width:96%}}

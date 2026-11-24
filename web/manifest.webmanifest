@@ -1,0 +1,18 @@
+{
+  "name": "EXE PRO Cloud Full by EXEKUTA",
+  "short_name": "EXE PRO Cloud",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0a0a0a",
+  "description": "EXE PRO Cloud Full 3.9.1 — gestão de tarefas, equipe, SLA, checklist, tempo e acompanhamento no Portal do Cliente.",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

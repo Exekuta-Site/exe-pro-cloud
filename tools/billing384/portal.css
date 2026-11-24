@@ -1,0 +1,16 @@
+
+/* EXE PRO 3.8.4 — Financeiro Recorrente no Portal */
+.pb384-dash{margin-top:14px}
+.pb384-mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pb384-mini>div,.pb384-invoice-kpis>div{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.pb384-mini span,.pb384-invoice-kpis span{display:block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.pb384-mini b,.pb384-invoice-kpis b{display:block;font-size:18px;margin-top:5px}
+.pb384-main{margin-top:14px}
+.pb384-invoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pb384-invoice{margin:0}
+.pb384-invoice-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.pb384-invoice-kpis b{font-size:14px}
+.pb384-overdue,.pb384-discount{margin:10px 0}
+.pb384-items,.pb384-payments{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+@media(max-width:1050px){.pb384-invoices{grid-template-columns:1fr}.pb384-mini,.pb384-invoice-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.pb384-mini,.pb384-invoice-kpis{grid-template-columns:1fr 1fr}}
