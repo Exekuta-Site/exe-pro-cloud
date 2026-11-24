@@ -142,3 +142,32 @@ Nenhuma alteração foi efetuada no banco de produção ou nos recursos do Shard
 **Recomendação:** manter PRs em rascunho, não realizar deploy; a próxima fase deve verificar em modo de leitura as condições de retenção e automação, sem ativar controles, baixar dumps ou revelar credenciais. Um teste de restore deve exigir aprovação expressa futura e ambiente separado.
 
 **Nota de rastreabilidade:** este registro é evidência fornecida pelo proprietário via captura. Não significa que o ChatGPT tenha acesso autenticado ao dashboard do Shard Cloud.
+
+## 9. Evidência de assinatura Core 1 — elegibilidade para backup automático (24/11/2026)
+
+**Evidência fornecida pelo proprietário nesta conversa:** o plano contratado do Shard Cloud é **Core 1**. O usuário informou diretamente o nome do plano; não houve captura do faturamento ou acesso ao cadastro da conta.
+
+**Documentação pública consultada em 24/11/2026:** a página oficial [Backups para Apps, Bancos e VPS](https://shardcloud.app/pt-br/resources/backups) informa que os backups **manuais** são disponibilizados a partir dos painéis dos recursos, e que os backups **automáticos** estão disponíveis **a partir do plano Pro**, com execução diária quando ativados. A [comparação oficial de planos](https://shardcloud.app/pt-br/resources/plan-comparison) confirma o backup automático como diferencial do Pro versus Core.
+
+### Conclusão de elegibilidade e proteção atual
+
+| Item | Estado apurado | Base |
+| --- | --- | --- |
+| Plano do proprietário | **Core 1** | Informação expressa do proprietário, não auditada na cobrança |
+| Backup automático nativo do PostgreSQL | **Não incluído no plano Core** | Regra pública oficial Shard Cloud: a partir do Pro; tela do banco informa PRO & Enterprise |
+| Backup manual disponível | **Sim** | Painel exibe ação 'Realizar cópia de segurança' e histórico com 1/8 cópias |
+| Último registro de backup do PostgreSQL | **24/11/2026 11:20:52, listado como disponível** | Captura da aba Backups de `exe-pro-db` |
+| Backup automático ativo no banco | **Sem evidência; não disponível pelo plano Core 1** | Plano informado + regras oficiais |
+| Backup restaurável comprovado | **Não** | Nenhum teste em instância isolada, integridade não verificada |
+| Retenção efetiva e limite operacional | **8 slots observados; expiração/ciclo e política da instância não verificados** | Painel 1/8; página pública informa permanência até exclusão, mas não uma política efetiva da conta |
+
+### Conduta recomendada sem modificar produção
+
+1. **Não alterar assinatura nem ativar backup automático** nesta auditoria.
+2. **Manter intacto o backup existente** (24/11/2026) e não apagar cópias para abrir slots sem uma política aprovada.
+3. Estabelecer **rotina manual de backups** em frequência proporcional à taxa de mudanças do CRM (mínimo antes de cada alteração/deploy; backups entre alterações frequentes devem ter cadência definida com o proprietário). O registro de um backup isolado não protege contra perda posterior de dados.
+4. Planejar revisão futura de retenção e proteção fora da conta, respeitando sigilo dos registros e capacidade de restauração.
+5. Se a exigência for backup diário automático nativo, **avaliar** o plano Pro com custo e condições atualizados; não efetuar upgrade sem autorização específica.
+6. Exigir homologação de restauração em instância **isolada**, após aprovação separada e sem expor dados pessoais, antes de declarar recuperabilidade comprovada.
+
+**Estado da Etapa 3C:** requisito de plano/elegibilidade **esclarecido**; integridade e recuperabilidade **ainda pendentes**. Nenhuma escrita no PostgreSQL, alteração de assinatura, restauração, backup novo ou deploy foi realizada.
