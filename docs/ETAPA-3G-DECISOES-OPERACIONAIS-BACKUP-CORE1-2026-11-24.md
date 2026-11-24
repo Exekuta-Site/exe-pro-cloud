@@ -50,3 +50,13 @@ O titular informou plano Shard Cloud **Core 1**, que não inclui backup automát
 - [Etapa 3E — política operacional, responsabilidades e custos](./ETAPA-3E-POLITICA-OPERACIONAL-CORE1-CUSTOS-2026-11-24.md).
 - [Etapa 3F — checklist de prontidão e gates de autorização](./ETAPA-3F-PRONTIDAO-IMPLANTACAO-BACKUP-POSTGRESQL-2026-11-24.md).
 - [Relatório consolidado da Etapa 3](./ETAPA-3-AUDITORIA-BACKUP-POSTGRESQL-2026-11-24.md).
+
+## 5. Encerramento a pedido do proprietário (24/11/2026)
+
+**Decisão expressa:** encerrar o planejamento adicional de backups e retomar desenvolvimento do EXE PRO. **Etapa 3G encerrada sem implantação da rotina**; não exigir preenchimento de responsável, substituto, horário, R2/B2, retenção ou contratação como condição para retornar às correções do software.
+
+**Backup existente:** a captura anterior mostrou 1/8 backups disponíveis para `exe-pro-db`, um de 24/11/2026 11:20:52. **Nenhuma ação foi executada no banco ou no backup**; o estado atual e sua integridade/recuperabilidade continuam não comprovados por restore.
+
+**Documentação:** preservar Etapas 3B–3G, este registro e o PR #3 em rascunho como histórico, **não ativar** calendário, contas, buckets, downloads nem exclusões. Nunca interpretar planos de rotina como rotinas operacionais em funcionamento. Nenhum merge ou deploy.
+
+**Próxima prioridade de desenvolvimento:** retomar a revisão do PR #1 (cabeçalhos de segurança do Portal) em branch isolada, sem publicar nada. A observação anterior de suposta incompatibilidade global 5 MB vs 8 MB no upload deve ser corrigida: `server.js` usa `portalReadJsonLarge` com limite de 12 MiB nos endpoints de upload do Portal, enquanto `readBody` de 5 MiB se aplica a outros endpoints. **Não alterar o upload sem erro efetivamente reproduzido**.
