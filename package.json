@@ -16,7 +16,9 @@
     "build:prebuilt": "npm run build && npm run seal:prebuilt",
     "seal:prebuilt": "node tools/prebuilt-artifact.js seal",
     "check:prebuilt": "node tools/prebuilt-artifact.js verify",
-    "start:prebuilt": "npm run check:prebuilt && node server.js"
+    "start:prebuilt": "npm run check:prebuilt && node server.js",
+    "package:prebuilt": "node tools/bundle-prebuilt.js bundle",
+    "check:bundle": "node tools/bundle-prebuilt.js verify"
   },
   "dependencies": {
     "pg": "^8.13.0"
