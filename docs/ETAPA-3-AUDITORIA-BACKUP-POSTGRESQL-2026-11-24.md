@@ -1,7 +1,7 @@
 # EXE PRO v4.4.0 — Etapa 3: verificação dos backups reais do PostgreSQL
 
 **Data da avaliação:** 24/11/2026  
-**Estado:** **PENDENTE DE EVIDÊNCIA DO BANCO** — nenhuma conclusão de recuperabilidade é possível até localizar o serviço PostgreSQL e seu histórico de backup.  
+**Estado atualizado após evidência de 24/11/2026:** **UM BACKUP POSTGRESQL LISTADO E DISPONÍVEL NO PAINEL; RECUPERABILIDADE NÃO COMPROVADA.** A instância `exe-pro-db` foi localizada, mas integridade e restauração isolada ainda não foram verificadas.  
 **Ambiente:** `exe-pro-cloud` no Shard Cloud, PRODUÇÃO.  
 **Modo:** somente leitura, sem SQL, sem restore, sem exportação e sem mudança de configurações.  
 **Documento da etapa:** branch `auditoria/postgres-backups-etapa3`, baseada em `fix/prebuilt-startup-4.4.0`.
@@ -12,9 +12,9 @@
 | --- | --- | --- |
 | Banco utilizado pelo aplicativo | `lib/postgres.js` utiliza driver `pg` e configuração PostgreSQL. Relatório de auditoria Shard Cloud descreve banco gerenciado. | PostgreSQL identificado na arquitetura; **a instância exata não foi confirmada neste turno**. |
 | Backups do aplicativo | Relatório Shard Cloud enviado pelo proprietário registra `exe-pro-cloud` em 03/11/2026 e `App Exekuta` em 23/11/2026. Ambos com campo `database_name` vazio e `is_vm: false`. | **Não há comprovação de que os backups de arquivos contenham o PostgreSQL.** |
-| Backup do banco PostgreSQL | Backup ZIP disponibilizado pelo proprietário não contém dump identificado do PostgreSQL. Sem acesso autenticado ao dashboard da instância de banco. | **NÃO COMPROVADO**: não significa que o banco esteja sem backup. |
-| Último backup PostgreSQL bem-sucedido | Nenhum registro do serviço de banco disponibilizado. | **NÃO VERIFICADO** |
-| Backups automáticos habilitados | Nenhuma tela das configurações do banco apresentada. | **NÃO VERIFICADO** |
+| Backup do banco PostgreSQL | Captura posterior do proprietário, aba **Backups** de `exe-pro-db`, mostra **1/8 backup disponível**, entrada com data **24/11/2026 11:20:52** e ações Restaurar/Download. O ZIP do aplicativo continua sem dump de banco. | **BACKUP LISTADO NO PAINEL.** Conteúdo, integridade e recuperação não testados. |
+| Último backup PostgreSQL bem-sucedido | Há um único registro visível de backup disponível com ícone de confirmação e horário exibido de 24/11/2026 11:20:52. | **DISPONIBILIDADE CONFIRMADA NA INTERFACE**; execução e integridade não validadas independentemente. |
+| Backups automáticos habilitados | A captura mostra o bloco Backup Automático com chave aparentemente desligada e indicação de recurso PRO/Enterprise. | **NÃO HÁ EVIDÊNCIA DE AUTOMÁTICO ATIVO**; plano e política efetivos não confirmados. |
 | Retenção e local de armazenamento | Nenhuma evidência da política aplicada à instância. | **NÃO VERIFICADO** |
 | Integridade e teste real de restauração | Nenhum relatório de restore isolado apresentado. | **NÃO VERIFICADO** |
 | PITR / RPO / RTO | Não demonstrados por evidência da instância nem testes. | **NÃO VERIFICADO** |
@@ -97,8 +97,8 @@ Fontes públicas:
 | Campo | Valor/estado |
 | --- | --- |
 | Nome identificável não sensível da instância | `exe-pro-db` — confirmada na tela do serviço PostgreSQL, ambiente PRODUCTION, Online (1/1 nós) |
-| Último backup PostgreSQL com sucesso | Não verificado |
-| Automaticidade / frequência | Não verificado |
+| Backup PostgreSQL disponível no painel | 1 de 8; registro `exe-pro-db / EXE-PRO-DB`, 24/11/2026 11:20:52; recuperabilidade não verificada |
+| Automaticidade / frequência | Recurso de Backup Automático aparece sem indicação de estar ativado; frequência não verificada |
 | Retenção real da instância | Não verificado |
 | PITR | Não verificado |
 | Restore em instância isolada | Não realizado; exige autorização separada |
@@ -118,3 +118,27 @@ O proprietário apresentou captura de tela da aba **Projeto** da instância Shar
 **Próxima evidência solicitada:** clicar apenas na aba **Backups** dessa instância e enviar captura da listagem de pontos/estados e, se disponível, configuração de automação. Não clicar em Restaurar, Excluir nem Criar Backup. Não compartilhar credenciais, dumps ou dados pessoais.
 
 Nenhuma alteração foi efetuada no banco de produção ou nos recursos do Shard Cloud.
+
+## 8. Evidência visual — backup PostgreSQL listado (24/11/2026)
+
+**Origem:** captura enviada pelo proprietário da aba **Backups** da instância `exe-pro-db` no Shard Cloud. Esta atualização diferencia a observação atual das seções 1–7, que registram o estado anterior à apresentação da captura. Não houve acesso direto ao serviço nem testes de recuperação.
+
+### Observações verificadas na captura
+
+- **Recurso:** `exe-pro-db` (PostgreSQL) com indicador **Online (1/1 nós)** no cabeçalho.
+- **Histórico:** a interface informa **`1/8 backup disponível`** e exibe uma entrada `exe-pro-db / EXE-PRO-DB`.
+- **Horário exibido:** **24 de novembro de 2026, 11:20:52**. O fuso horário desse timestamp não aparece explicitamente na captura; não inferir UTC.
+- **Estado na interface:** entrada com ícone de check e ações **Restaurar**, **Download** e **Excluir**; portanto existe um backup **listado como disponível**. O ícone não é teste de integridade.
+- **Backup Automático:** bloco informativo `Ative para criar backups automáticos da sua database periodicamente`, indicação de funcionalidade PRO/Enterprise, controle aparentemente desativado. **Não há evidência de uma política automática ativa nem de sua cadência**.
+- **Escopo e tamanho do backup, local de armazenamento, retenção efetiva, checksum, PITR, conclusão de jobs e teste de restauração:** **não verificados**.
+- **Nenhum backup foi baixado, criado, excluído ou restaurado por esta auditoria.**
+
+### Conclusão atualizada e limites
+
+**CONFIRMADO:** existe ao menos **uma entrada de backup do PostgreSQL listada como disponível** no painel do serviço `exe-pro-db`. O risco de ausência de qualquer registro de backup é reduzido, mas não eliminado quanto à efetiva recuperabilidade.
+
+**NÃO COMPROVADO:** restauração bem-sucedida em banco isolado, recuperação de dados e integridade, cobertura das tabelas, periodicidade automática, retenção e eventual PITR.
+
+**Recomendação:** manter PRs em rascunho, não realizar deploy; a próxima fase deve verificar em modo de leitura as condições de retenção e automação, sem ativar controles, baixar dumps ou revelar credenciais. Um teste de restore deve exigir aprovação expressa futura e ambiente separado.
+
+**Nota de rastreabilidade:** este registro é evidência fornecida pelo proprietário via captura. Não significa que o ChatGPT tenha acesso autenticado ao dashboard do Shard Cloud.
