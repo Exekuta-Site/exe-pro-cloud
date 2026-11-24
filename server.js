@@ -7,6 +7,7 @@ const crypto = require('node:crypto');
 const zlib = require('node:zlib');
 const { createPool, withTransaction } = require('./lib/postgres');
 const { initSchema } = require('./lib/schema');
+const { portalResponseHeaders } = require('./lib/portal-response-headers');
 
 const HOST = process.env.EXE_CLOUD_HOST || '0.0.0.0';
 const PORT = Number(process.env.PORT || process.env.EXE_CLOUD_PORT || 8080);
@@ -3601,7 +3602,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==='GET'&&((url.pathname==='/portal')||(url.pathname==='/portal/')||(url.pathname==='/portal/index.html')||((String(req.headers.host||'').split(':')[0].toLowerCase()==='portal.exekuta.com.br')&&url.pathname==='/'))){
       try{
         const file=require('node:fs').readFileSync(require('node:path').join(__dirname,'web','portal.html'));
-        res.writeHead(200,{'content-type':'text/html; charset=utf-8','content-length':file.length,'cache-control':'no-store','x-content-type-options':'nosniff','referrer-policy':'strict-origin-when-cross-origin'});
+        res.writeHead(200,portalResponseHeaders(file.length, REQUIRE_HTTPS));
         return res.end(file);
       }catch{return json(res,404,{ok:false,error:'Portal do Cliente nao encontrado.'})}
     }

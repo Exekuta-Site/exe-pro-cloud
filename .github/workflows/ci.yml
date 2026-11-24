@@ -26,7 +26,7 @@ jobs:
         run: npm run build
 
       - name: WhatsApp regression tests
-        run: node --test tools/whatsapp420/history.test.js tools/whatsapp420/cleanup.test.js tools/site440/lead.test.js
+        run: node --test tests/portal-response-headers.test.js tools/whatsapp420/history.test.js tools/whatsapp420/cleanup.test.js tools/site440/lead.test.js
 
       - name: Syntax check
         run: node --check server.js
