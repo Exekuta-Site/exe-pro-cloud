@@ -92,11 +92,11 @@ Fontes públicas:
 4. Se houver tela de configurações, apenas consultar se existe backup automático habilitado, frequência, retenção e recuperação para ponto no tempo; não ativar nada.
 5. Enviar print com credenciais, URLs de conexão e dados pessoais ocultos. Se não encontrar o menu, enviar somente a navegação do painel sem valores secretos.
 
-### Evidência ainda não recebida
+### Evidência parcial recebida
 
 | Campo | Valor/estado |
 | --- | --- |
-| Nome identificável não sensível da instância | Aguardando print |
+| Nome identificável não sensível da instância | `exe-pro-db` — confirmada na tela do serviço PostgreSQL, ambiente PRODUCTION, Online (1/1 nós) |
 | Último backup PostgreSQL com sucesso | Não verificado |
 | Automaticidade / frequência | Não verificado |
 | Retenção real da instância | Não verificado |
@@ -106,3 +106,15 @@ Fontes públicas:
 Próxima atualização deste documento ocorrerá **após o recebimento da evidência visual**. Não concluir que o backup existe, falta ou é restaurável a partir de páginas genéricas da plataforma.
 
 Referências públicas: https://shardcloud.app/pt-br/resources/backups e https://shardcloud.app/pt-br/resources/databases.
+
+## 7. Evidência visual — instância localizada (24/11/2026)
+
+O proprietário apresentou captura de tela da aba **Projeto** da instância Shard Cloud com nome **`exe-pro-db`**. O recurso está identificado como **POSTGRES Database**, ambiente **PRODUCTION**, estado **Online (1/1 nós)**. A interface exibe **71 MB utilizados de 8 GB**. O nome é compatível com o banco esperado do EXE PRO, mas a associação técnica exata com a aplicação não foi demonstrada por uma configuração de conexão (que não deve ser compartilhada).
+
+**Constatação permitida:** existe uma instância PostgreSQL de produção denominada `exe-pro-db` acessível no painel do proprietário.
+
+**Constatação NÃO permitida:** a captura ainda **não mostra o conteúdo da aba Backups**; não confirma backup executado, sucesso, data, frequência, retenção, PITR ou recuperabilidade. O estado do banco como Online não comprova existência de backup.
+
+**Próxima evidência solicitada:** clicar apenas na aba **Backups** dessa instância e enviar captura da listagem de pontos/estados e, se disponível, configuração de automação. Não clicar em Restaurar, Excluir nem Criar Backup. Não compartilhar credenciais, dumps ou dados pessoais.
+
+Nenhuma alteração foi efetuada no banco de produção ou nos recursos do Shard Cloud.
