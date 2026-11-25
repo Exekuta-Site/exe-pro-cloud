@@ -202,6 +202,26 @@ test('CSS fase 3 cobre formularios, tabelas, modal, toast e estados acessiveis',
   assert.doesNotMatch(css, /(?:^|[\s,])\.hidden\s*\{/m);
 });
 
+test('regressao da borda de input invalido no Admin e modal sem afetar disabled', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'web', INTERACTIONS_FILENAME), 'utf8');
+  const baseline = '#content .field .input:not([type="color"]):not([type="file"]),';
+  const originalErrorState = '#content .field :is(input,select,textarea)[aria-invalid="true"],';
+  const adminInvalid = '#content .field .input:not([type="color"]):not([type="file"])[aria-invalid="true"]:not(:disabled),';
+  const modalInvalid = '#modalBack .field .input:not([type="color"]):not([type="file"])[aria-invalid="true"]:not(:disabled) {';
+  assert.ok(css.includes(baseline), 'campo original não pode ser removido');
+  assert.ok(css.includes(originalErrorState), 'estado geral invalid não pode ser removido');
+  assert.ok(css.includes(adminInvalid), 'seletor específico de erro no Admin ausente');
+  assert.ok(css.includes(modalInvalid), 'seletor específico de erro no modal ausente');
+  assert.ok(css.indexOf(adminInvalid) > css.indexOf(originalErrorState),
+    'borda de erro precisa ter precedência sobre a regra de base');
+  const target = css.slice(css.indexOf(adminInvalid), css.indexOf(adminInvalid) + 380);
+  assert.match(target, /border-color:\s*#e88491\s*;/);
+  assert.match(target, /box-shadow:\s*0 0 0 3px rgba\(232,132,145,\.15\)/);
+  assert.doesNotMatch(target, /!important/);
+  assert.match(adminInvalid, /:not\(:disabled\)/);
+  assert.match(modalInvalid, /:not\(:disabled\)/);
+});
+
 test('HTML original inclui modal e toast fora do content, e patch CSS nao altera estado', t => {
   const original = '<!doctype html><html><head></head><body>' +
     '<div id="content"><button onclick="newClient()">Cliente</button>' +
