@@ -39,6 +39,41 @@ jobs:
           node tools/bundle-prebuilt.js verify "$RUNNER_TEMP/exe-pro-transferred"
           (cd "$RUNNER_TEMP/exe-pro-transferred" && node tools/prebuilt-artifact.js verify)
 
+      # O pacote extraido veio do build do proprio runner, nao do Shard Cloud.
+      # Esta etapa nao executa server.js, nao abre porta e nao conecta ao DB.
+      - name: Disposable dependency laboratory (no server or database)
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          LAB="$RUNNER_TEMP/exe-pro-lab-dependencies"
+          HOME_LAB="$RUNNER_TEMP/exe-pro-lab-home"
+          CACHE_LAB="$RUNNER_TEMP/exe-pro-lab-cache"
+          mkdir -p "$LAB" "$HOME_LAB" "$CACHE_LAB"
+          : > "$HOME_LAB/user.npmrc"
+          : > "$HOME_LAB/global.npmrc"
+          cp -a "$RUNNER_TEMP/exe-pro-transferred/." "$LAB/"
+          cd "$LAB"
+          test ! -e .env
+          test ! -d node_modules
+          node tools/prebuilt-artifact.js verify
+          LOCK_BEFORE="$(sha256sum package-lock.json | cut -d' ' -f1)"
+          env -i PATH="$PATH" HOME="$HOME_LAB" \
+            npm_config_cache="$CACHE_LAB" \
+            npm_config_userconfig="$HOME_LAB/user.npmrc" \
+            npm_config_globalconfig="$HOME_LAB/global.npmrc" \
+            npm_config_ignore_scripts=true \
+            npm_config_audit=false npm_config_fund=false \
+            npm_config_update_notifier=false \
+            npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+          LOCK_AFTER="$(sha256sum package-lock.json | cut -d' ' -f1)"
+          test "$LOCK_BEFORE" = "$LOCK_AFTER"
+          node tools/prebuilt-artifact.js verify
+          npm ls --omit=dev --depth=0
+          node -e 'const fs=require("node:fs"); const a=JSON.parse(fs.readFileSync("package-lock.json")); const b=JSON.parse(fs.readFileSync("node_modules/pg/package.json")); if(b.version !== a.packages["node_modules/pg"].version) process.exit(1); console.log("Lockfile pg version verified:", b.version);'
+          node --check server.js
+          echo "Disposable dependency lab passed without starting the server"
+
       - name: Prebuilt startup and package regression tests
         run: node --test tests/prebuilt-artifact.test.js tests/bundle-prebuilt.test.js
 
