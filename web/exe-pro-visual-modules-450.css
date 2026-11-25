@@ -1,0 +1,141 @@
+/* EXE PRO 4.5.0 · Fase 2 — módulos e blocos.
+ * Refinamento só visual, escopado em #content. IDs, handlers, lógica e dados intactos.
+ * Prioridades vencidas, SLA e ações destrutivas continuam distintas.
+ */
+
+/* A grade genérica da fase 1 não deve substituir grades específicas existentes. */
+#content .t391-kpis,#content .c390-kpis{grid-template-columns:repeat(7,minmax(0,1fr))}
+#content .b384-kpis,#content .notif-kpis,#content .wp370-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+#content .seo382-kpis,#content .d383-kpis,#content .cp380-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+#content .a381-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* Central Comercial — números, funil, status e cards. */
+#content .commercial366-rulebar{gap:16px;padding:16px 18px;margin-bottom:18px;border:1px solid #3b4b39;border-radius:16px;background:linear-gradient(120deg,#202a1e,#141b14)}
+#content .commercial366-rulebar b{font-size:12px;color:#f0f6ee}
+#content .commercial366-rulebar span{font-size:10px;color:#a2b09e;line-height:1.55}
+#content .commercial366-kpis{gap:12px;margin-bottom:17px}
+#content .commercial366-kpis>div{min-width:0;padding:16px;border:1px solid #354533;border-radius:16px;background:linear-gradient(140deg,#1d261c,#131a13)}
+#content .commercial366-kpis b{font-size:clamp(20px,2vw,27px);font-variant-numeric:tabular-nums}
+#content .commercial366-kpis span{font-size:9px;color:#abb8a8;line-height:1.45}
+#content .commercial366-grid{gap:16px}
+#content .commercial366-card{padding:19px}
+#content .commercial366-card.overdue{border-color:#77524c}
+#content .commercial366-card.today{border-color:color-mix(in srgb,var(--accent) 45%,#354134)}
+#content .commercial366-card-head h3{font-size:15px;line-height:1.4}
+#content .commercial366-card-head p{color:#a0afa0;font-size:10px}
+#content .commercial366-score b{font-variant-numeric:tabular-nums}
+#content .commercial366-info{gap:9px}
+#content .commercial366-info>div{min-width:0;padding:11px;border-color:#334133;background:#141b14;border-radius:11px}
+#content .commercial366-info label{color:#9caa98;font-size:8px}
+#content .commercial366-info strong{color:#edf4e9;font-size:10px}
+#content .commercial366-note{background:#141b14;border-color:#344133}
+#content .commercial366-note span{color:#abb7a7;font-size:10px}
+#content .commercial366-filters button{min-height:39px;border-color:#3b4839;border-radius:11px;background:#192119;color:#bdc9b9;font-size:10px}
+#content .commercial366-filters button.active{color:#f5f8f3;background:color-mix(in srgb,var(--accent) 12%,#182018);border-color:color-mix(in srgb,var(--accent) 40%,#3b4839)}
+#content .commercial366-funnel-grid{gap:10px}
+
+/* Prospecção e Lead Score — preserve valores, fotos, links, origem e pontuação. */
+#content .prospect365-tabs,#content .prospect365-intel{gap:9px}
+#content .prospect365-tab{min-height:38px;border-color:#3c4b39;border-radius:11px;color:#c2cfbf;background:#1b251a}
+#content .prospect365-tab.active{background:var(--accent);border-color:var(--accent);color:#071106}
+#content .prospect365-intel button{min-height:35px;border-color:#394738;background:#1b231b;color:#b0bcad;font-size:9px}
+#content .prospect365-intel button.active{border-color:color-mix(in srgb,var(--accent) 45%,#394738);background:color-mix(in srgb,var(--accent) 11%,#1b231b);color:#f5f8f4}
+#content .prospect365-toolbar{padding:16px 17px}
+#content .prospect365-toolbar strong{font-size:12px;color:#f3f7f1}
+#content .prospect365-toolbar span{font-size:10px;color:#abb6a8}
+#content .prospect365-grid{gap:14px;padding:15px;border-color:#354334;background:#101810}
+#content .prospect365-card{min-width:0}
+#content .prospect365-content{padding:16px}
+#content .prospect365-title h3{font-size:14px;line-height:1.45}
+#content .prospect365-title>div{font-size:10px;color:#9ea99b}
+#content .prospect365-info{gap:8px}
+#content .prospect365-info>div{min-width:0;padding:10px;border:1px solid #344334;background:#131c13;border-radius:10px}
+#content .prospect365-info label{font-size:8px;color:#a0af9b}
+#content .prospect365-info strong{font-size:10px;color:#f0f6ed}
+#content .prospect365-info small{color:#a1b09d}
+#content .prospect365-address{border:1px solid #354633;border-radius:10px;background:#1e2a1e;color:#d1dfcc;font-size:10px;line-height:1.55}
+#content .prospect365-scoreline{border-color:#344233;background:#131c13}
+#content .prospect365-scoreline span{color:#a4b1a0}
+#content .prospect365-scoreline small{color:#9ba997}
+#content .prospect365-actions{border-top-color:#354334}
+
+/* Tarefas / equipe / SLA — cards e colunas, sem mexer no status de atraso. */
+#content .t391-toolbar{gap:14px;margin:16px 0}
+#content .t391-board{gap:13px}
+#content .t391-col{background:#121a12;border-color:#344232;border-radius:16px;min-width:0}
+#content .t391-col-head{padding:13px 14px;border-bottom-color:#354234;background:#1d271c}
+#content .t391-col-head b{font-size:11px;color:#eaf2e7}
+#content .t391-col-head span{color:#d0dec9;background:#2c382a;font-size:9px}
+#content .t391-col-body{padding:11px;gap:10px}
+#content .t391-card{padding:13px;border:1px solid #374638;border-radius:13px;background:linear-gradient(155deg,#202a1f,#171e17)}
+#content .t391-card.sla-over{border-color:#845058}
+#content .t391-card h4{font-size:12px;line-height:1.45;color:#f0f4ec}
+#content .t391-card-meta span{font-size:9px;color:#b4c0b0}
+#content .t391-card-meta b{color:#eef4ea}
+#content .t391-card-foot{border-top-color:#354234}
+#content .t391-team>div,#content .t391-section,#content .t391-sla-grid>div{border-color:#354435;border-radius:13px;background:#172017}
+#content .t391-team>div>div>span{color:#acb9a8}
+#content .t391-sla-grid span{color:#b2c0ad}
+#content .t391-comment{border-color:#354435;background:#1a2419}
+#content .t391-comment p{color:#c9d6c5}
+
+/* Financeiro recorrente, clientes e relatórios — somente apresentações. */
+#content .b384-toolbar,#content .seo382-toolbar{gap:14px;margin:16px 0}
+#content .b384-check,#content .seo382-check{padding:13px 14px;border-color:#3c4b39;background:#192219;color:#dce8d6;border-radius:12px}
+#content .b384-client-stats span,#content .t391-client-stats span{padding:7px 10px;border-color:#40503c;background:#202a1f;color:#d3dfcc;border-radius:999px}
+#content .seo382-section{padding:17px;border-color:#344332;border-radius:17px;background:linear-gradient(140deg,#1b241a,#131a13)}
+#content .seo382-section h3{font-size:15px;color:#f0f5ed}
+#content .seo382-key-head{font-size:9px;color:#bccab8}
+#content .seo382-key-row{border-top-color:#344133}
+#content .lead-card,#content .result-card{padding:13px}
+#content .lead-card h4{color:#f0f5ec;font-size:12px;line-height:1.4}
+#content .lead-card p,#content .result-card p{color:#adbaaa;font-size:10px;line-height:1.5}
+#content .pipe-head{font-size:11px;color:#e7f0e3}
+#content .client-toolbar369{border:1px solid #354333;border-radius:13px;background:#172017;padding:11px}
+#content .client-finance-hint369{color:#b8c6b1}
+#content .master363-card{padding:19px}
+#content .master363-card h3{font-size:15px}
+
+/* Ações perigosas e semântica crítica permanecem visíveis. */
+#content .btn.danger,#content .danger369{color:#ffadb0;border-color:#844447;background:#321a1d}
+#content .btn.danger:hover:not(:disabled),#content .danger369:hover:not(:disabled){border-color:#be656a;background:#482226;color:#ffd8d7}
+#content .btn.ghost{background:transparent}
+#content .status.bad{color:#ff9ba3;border-color:#85464d}
+#content .status.warn{color:#ffd186;border-color:#806036}
+#content .status.ok{color:#6fe0b3;border-color:#357560}
+
+/* Breakpoints próprios: não achatar o kanban ou sobrepor tabelas. */
+@media(max-width:1450px){
+  #content .t391-kpis,#content .c390-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #content .commercial366-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:1100px){
+  #content .t391-kpis,#content .c390-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #content .b384-kpis,#content .notif-kpis,#content .wp370-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #content .seo382-kpis,#content .d383-kpis,#content .cp380-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .commercial366-grid{grid-template-columns:1fr}
+  #content .prospect365-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:800px){
+  #content .t391-kpis,#content .c390-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .b384-kpis,#content .notif-kpis,#content .wp370-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .a381-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .commercial366-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .commercial366-card{padding:15px}
+  #content .commercial366-info{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .prospect365-grid{grid-template-columns:1fr;padding:11px}
+  #content .prospect365-toolbar{align-items:stretch;flex-direction:column}
+  #content .prospect365-toolbar-actions{justify-content:flex-start}
+  #content .t391-toolbar,#content .b384-toolbar,#content .seo382-toolbar{align-items:stretch;flex-direction:column}
+}
+@media(max-width:620px){
+  #content .t391-kpis,#content .c390-kpis{grid-template-columns:1fr}
+  #content .b384-kpis{grid-template-columns:1fr}
+  #content .commercial366-funnel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .commercial366-info{gap:7px}
+  #content .prospect365-info{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #content .prospect365-info>div:last-child{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){
+  #content .t391-card,#content .commercial366-card,#content .prospect365-card{transition:none;transform:none}
+}

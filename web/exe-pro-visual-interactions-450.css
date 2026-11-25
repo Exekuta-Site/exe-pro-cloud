@@ -1,0 +1,366 @@
+/* EXE PRO 4.5.0 · Fase 3 — formulários, tabelas, modais e interação.
+ * Somente apresentação: não cria/oculta controles, não muda handlers,
+ * validações, rotas, dados, classes de estado, overlays ou z-index.
+ * CSS injetado depois das fases 1 e 2; --accent continua configurável.
+ */
+
+/* Densidade e acessibilidade dos formulários reais do Admin. */
+#content .form-grid,
+#modalBack .form-grid {
+  gap: 16px 14px;
+  align-items: start
+}
+#content .field,
+#modalBack .field { min-width: 0 }
+#content .field label,
+#modalBack .field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #bcc9b8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  line-height: 1.45;
+  text-transform: uppercase
+}
+#content .field .input:not([type="color"]):not([type="file"]),
+#content .field select,
+#content .field textarea,
+#modalBack .field .input:not([type="color"]):not([type="file"]),
+#modalBack .field select,
+#modalBack .field textarea {
+  min-height: 43px;
+  padding: 11px 13px;
+  background: #101810;
+  border: 1px solid #405140;
+  border-radius: 12px;
+  color: #f1f6ef;
+  line-height: 1.45;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.14);
+  transition: border-color .17s ease, box-shadow .17s ease, background-color .17s ease
+}
+#content .field textarea,
+#modalBack .field textarea {
+  min-height: 96px;
+  line-height: 1.65;
+  resize: vertical
+}
+#content .field .input::placeholder,
+#content .field textarea::placeholder,
+#modalBack .field .input::placeholder,
+#modalBack .field textarea::placeholder { color: #9aaa95; opacity: 1 }
+#content .field :is(input, select, textarea):focus,
+#modalBack .field :is(input, select, textarea):focus {
+  border-color: var(--accent);
+  background: #152014;
+  box-shadow: 0 0 0 3px color-mix(in srgb,var(--accent) 13%,transparent);
+  outline: none
+}
+#content :is(input,select,textarea):focus-visible,
+#modalBack :is(input,select,textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px
+}
+#content .field :is(input,select,textarea)[aria-invalid="true"],
+#modalBack .field :is(input,select,textarea)[aria-invalid="true"] {
+  border-color: #e88491;
+  box-shadow: 0 0 0 3px rgba(232,132,145,.15)
+}
+/* A classe .input usa :not([type]) no estilo-base, com maior especificidade.
+   Reforçar apenas a borda e o halo de erro, preservando campos desativados. */
+#content .field .input:not([type="color"]):not([type="file"])[aria-invalid="true"]:not(:disabled),
+#modalBack .field .input:not([type="color"]):not([type="file"])[aria-invalid="true"]:not(:disabled) {
+  border-color: #e88491;
+  box-shadow: 0 0 0 3px rgba(232,132,145,.15)
+}
+#content .field :is(input,select,textarea):disabled,
+#modalBack .field :is(input,select,textarea):disabled {
+  opacity: .64;
+  background: #101510;
+  border-color: #343e34;
+  cursor: not-allowed
+}
+#content .field :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea):read-only:not(:disabled),
+#modalBack .field :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea):read-only:not(:disabled) {
+  background: #171e17;
+  color: #c9d5c5
+}
+#content :is(input[type="checkbox"],input[type="radio"]),
+#modalBack :is(input[type="checkbox"],input[type="radio"]) {
+  accent-color: var(--accent);
+  vertical-align: middle;
+  cursor: pointer
+}
+#content :is(input[type="checkbox"],input[type="radio"]):focus-visible,
+#modalBack :is(input[type="checkbox"],input[type="radio"]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px
+}
+#content .field.wide,
+#modalBack .field.wide { min-width: 0 }
+
+/* Área de busca, filtros, tabelas e linha ativa — sem alterar dados ou sorting. */
+#content .toolbar {
+  gap: 11px;
+  border: 1px solid #374837;
+  border-radius: 15px;
+  padding: 13px 14px;
+  background: linear-gradient(120deg,#1c271b,#151d15)
+}
+#content .toolbar .search {
+  min-height: 43px;
+  min-width: min(100%,230px)
+}
+#content .table-wrap,
+#modalBack .table-wrap {
+  border: 1px solid #3a4b39;
+  border-radius: 16px;
+  background: #121a12;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #506149 #151b15;
+  box-shadow: 0 14px 35px rgba(0,0,0,.20)
+}
+#content .table,
+#modalBack .table {
+  background: #131b13;
+  color: #eaf2e6;
+  font-size: 11px;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums
+}
+#content .table th,
+#modalBack .table th {
+  padding: 13px 14px;
+  color: #becdb7;
+  background: #202b1f;
+  border-bottom: 1px solid #40503d;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .075em;
+  text-align: left
+}
+#content .table td,
+#modalBack .table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #2d3b2d;
+  color: #d6e3d2;
+  vertical-align: middle
+}
+#content .table tbody tr:nth-child(even) td,
+#modalBack .table tbody tr:nth-child(even) td { background: #162016 }
+#content .table tbody tr:focus-within td,
+#modalBack .table tbody tr:focus-within td {
+  background: #233121;
+  box-shadow: inset 0 -1px 0 #41563c
+}
+@media (hover:hover) and (pointer:fine) {
+  #content .table tbody tr:hover td,
+  #modalBack .table tbody tr:hover td { background: #253323 }
+}
+#content .table td .btn,
+#modalBack .table td .btn { min-height: 33px; white-space: nowrap }
+#content .table td .tiny,
+#modalBack .table td .tiny { color: #adbaaa }
+#content .table-wrap:focus-within,
+#modalBack .table-wrap:focus-within { border-color: color-mix(in srgb,var(--accent) 35%,#3a4b39) }
+
+/* Comandos: mostrar estado sem mascarar o que já é perigoso. */
+#content .btn,
+#modalBack .btn {
+  min-height: 40px;
+  border-radius: 11px;
+  font-weight: 800;
+  line-height: 1.35
+}
+#content .btn.sm,
+#modalBack .btn.sm { min-height: 32px }
+#content :is(.btn,.tab):focus-visible,
+#modalBack .btn:focus-visible,
+#content :is(.prospect365-tab,.commercial366-filters button,.t391-tab):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px
+}
+#content .btn:active:not(:disabled),
+#modalBack .btn:active:not(:disabled) {
+  transform: translateY(0) scale(.985);
+  transition-duration: .06s
+}
+#content .btn:disabled,
+#modalBack .btn:disabled,
+#content .btn[aria-disabled="true"],
+#modalBack .btn[aria-disabled="true"] {
+  opacity: .50;
+  cursor: not-allowed;
+  box-shadow: none
+}
+#content .btn[aria-busy="true"],
+#modalBack .btn[aria-busy="true"] { cursor: progress }
+#content .btn.danger,
+#modalBack .btn.danger {
+  color: #ffc1c4;
+  background: #371c20;
+  border-color: #a15b62
+}
+#content .btn.danger:hover:not(:disabled),
+#modalBack .btn.danger:hover:not(:disabled) {
+  background: #49262b;
+  border-color: #d17a82;
+  color: #ffe1e1
+}
+#content .tabs { gap: 9px; row-gap: 7px }
+#content .tab {
+  min-height: 39px;
+  padding: 9px 13px;
+  color: #cbd8c7;
+  border-color: #3c4f38;
+  background: #1c261a
+}
+#content .tab:hover:not(.active) { background: #243021; border-color: #55724e }
+#content .tab.active {
+  background: var(--accent);
+  color: #081108;
+  border-color: var(--accent)
+}
+#content .status,
+#modalBack .status { font-size: 10px; line-height: 1.35; white-space: normal }
+#content .status.ok,
+#modalBack .status.ok { color: #7ee9bc; border-color: #3b795f }
+#content .status.warn,
+#modalBack .status.warn { color: #ffd78e; border-color: #886941 }
+#content .status.bad,
+#modalBack .status.bad { color: #ffb0b9; border-color: #a05e66 }
+
+/* Admin modal real fica FORA de #content: escopo separado e explícito. */
+#modalBack {
+  background: rgba(2,6,3,.80);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px)
+}
+#modalBack .modal {
+  width: min(930px,100%);
+  max-height: 92vh;
+  max-height: calc(100dvh - 28px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(18px,2.2vw,27px);
+  border: 1px solid #465744;
+  border-radius: 22px;
+  background: radial-gradient(circle at 96% -9%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 38%),linear-gradient(150deg,#1b241a,#101710);
+  box-shadow: 0 28px 95px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.035);
+  scrollbar-color: #52634d #121812
+}
+#modalBack .modal-head {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  margin-bottom: 19px;
+  border-bottom: 1px solid #3b4b39
+}
+#modalBack .modal-head>div { min-width: 0 }
+#modalBack .modal-head .eyebrow {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: .13em;
+  font-weight: 850
+}
+#modalBack .modal h2 {
+  margin: 7px 0 5px;
+  font-size: clamp(20px,2.1vw,26px);
+  line-height: 1.2;
+  letter-spacing: -.025em;
+  color: #f1f8ef
+}
+#modalBack #modalMeta { color: #a9b9a5; line-height: 1.5; font-size: 11px }
+#modalBack .modal-head>.btn {
+  flex: none;
+  min-width: 42px;
+  min-height: 42px;
+  border: 1px solid #50614b;
+  color: #f1f5ec;
+  background: #222e20
+}
+#modalBack .modal-head>.btn:hover { border-color: var(--accent); background: #2c3b29 }
+#modalBack #modalBody {
+  color: #dfebda;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.6
+}
+#modalBack #modalBody .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px
+}
+#modalBack #modalBody .notice {
+  border: 1px solid color-mix(in srgb,var(--accent) 32%,#354334);
+  border-radius: 12px;
+  background: color-mix(in srgb,var(--accent) 7%,#141d13);
+  color: #d9e7d4;
+  line-height: 1.6
+}
+#modalBack #modalBody .form-grid { gap: 16px 14px }
+#modalBack #modalBody :is(input,select,textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px
+}
+
+/* Mensagens e estados vazios: conteúdo, eventos e visibilidade intactos. */
+#content .notice {
+  border-color: color-mix(in srgb,var(--accent) 27%,#344332);
+  border-radius: 13px;
+  background: linear-gradient(105deg,color-mix(in srgb,var(--accent) 7%,#151e14),#151c14);
+  color: #d3e2ce;
+  line-height: 1.6
+}
+#content .empty,
+#modalBack .empty {
+  border-radius: 13px;
+  color: #a5b6a0;
+  font-size: 12px;
+  line-height: 1.65;
+  text-align: center
+}
+#toast {
+  max-width: min(420px,calc(100vw - 24px));
+  padding: 14px 17px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb,var(--accent) 30%,#394738);
+  background: linear-gradient(135deg,#20301e,#131c13);
+  color: #eff6eb;
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow: 0 22px 52px rgba(0,0,0,.47)
+}
+
+/* Celular: modal continua rolável, formulários não ultrapassam a tela. */
+@media(max-width:800px) {
+  #content .form-grid,#modalBack .form-grid { grid-template-columns: minmax(0,1fr); gap: 13px }
+  #content .field.wide,#modalBack .field.wide { grid-column: auto }
+  #content .toolbar { align-items: stretch; gap: 10px }
+  #content .toolbar .search { max-width: 100%; width: 100%; min-width: 0 }
+  #modalBack { padding: 12px }
+  #modalBack .modal { border-radius: 17px; padding: 18px; max-height: calc(100dvh - 24px) }
+  #modalBack .modal-head { padding-bottom: 14px; margin-bottom: 15px }
+  #modalBack .modal-head>.btn { min-width: 40px }
+  #content .table th,#modalBack .table th { padding: 12px 11px }
+  #content .table td,#modalBack .table td { padding: 12px 11px }
+}
+@media(max-width:430px) {
+  #content .tabs { gap: 6px }
+  #content .tab { padding: 9px 10px }
+  #modalBack .modal { padding: 15px }
+  #modalBack .modal h2 { font-size: 21px }
+  #toast { right: 12px; bottom: 12px; left: 12px; max-width: none }
+}
+@media(prefers-reduced-motion:reduce) {
+  #content .btn,#modalBack .btn,
+  #content .field :is(input,select,textarea),
+  #modalBack .field :is(input,select,textarea) { transition: none }
+  #content .btn:active:not(:disabled),
+  #modalBack .btn:active:not(:disabled) { transform: none }
+}

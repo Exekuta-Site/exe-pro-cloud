@@ -80,5 +80,8 @@ jobs:
       - name: WhatsApp regression tests
         run: node --test tests/portal-response-headers.test.js tools/whatsapp420/history.test.js tools/whatsapp420/cleanup.test.js tools/site440/lead.test.js
 
+      - name: Visual premium v4.5.0 regression (CSS only)
+        run: node --test tests/visual-premium-450.test.js
+
       - name: Syntax check
         run: node --check server.js
