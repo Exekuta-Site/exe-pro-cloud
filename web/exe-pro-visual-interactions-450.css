@@ -73,8 +73,8 @@
   border-color: #343e34;
   cursor: not-allowed
 }
-#content .field :is(input,textarea):read-only:not(:disabled),
-#modalBack .field :is(input,textarea):read-only:not(:disabled) {
+#content .field :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea):read-only:not(:disabled),
+#modalBack .field :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea):read-only:not(:disabled) {
   background: #171e17;
   color: #c9d5c5
 }
