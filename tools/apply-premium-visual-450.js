@@ -7,13 +7,19 @@ const path = require('node:path');
 
 const STYLE_ID = 'exeProVisualPremium450';
 const STYLE_FILENAME = 'exe-pro-visual-premium-450.css';
+const MODULES_FILENAME = 'exe-pro-visual-modules-450.css';
 const STYLE_REGEX = /<style id="exeProVisualPremium450">[\s\S]*?<\/style>\s*/g;
 
 function applyVisualPremium(root = path.resolve(__dirname, '..')) {
   const indexPath = path.join(root, 'web', 'index.html');
   const cssPath = path.join(root, 'web', STYLE_FILENAME);
   const original = fs.readFileSync(indexPath, 'utf8');
-  const css = fs.readFileSync(cssPath, 'utf8').trim();
+  // Carrega as duas camadas na ordem: design base e overrides específicos dos módulos.
+  // O bloco injetado continua único e idempotente, sem novos scripts ou requests.
+  const css = [
+    fs.readFileSync(cssPath, 'utf8').trim(),
+    fs.readFileSync(path.join(root, 'web', MODULES_FILENAME), 'utf8').trim()
+  ].join('\n\n');
 
   if (!original.includes('</head>') || !original.includes('id="content"')) {
     throw new Error('EXE PRO Premium: estrutura esperada do Admin ausente; abortando sem escrever.');
@@ -43,4 +49,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { applyVisualPremium, STYLE_ID, STYLE_FILENAME, STYLE_REGEX };
+module.exports = { applyVisualPremium, STYLE_ID, STYLE_FILENAME, MODULES_FILENAME, STYLE_REGEX };
