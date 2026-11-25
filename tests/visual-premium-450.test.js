@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { applyVisualPremium, STYLE_ID, STYLE_FILENAME, MODULES_FILENAME, STYLE_REGEX } = require('../tools/apply-premium-visual-450');
+const { applyVisualPremium, STYLE_ID, STYLE_FILENAME, MODULES_FILENAME, INTERACTIONS_FILENAME, STYLE_REGEX } = require('../tools/apply-premium-visual-450');
 
 function fixture(t, html) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'exe-pro-premium-'));
@@ -21,6 +21,8 @@ function fixture(t, html) {
     '/* CSS de teste */\n#content .kpi{border-radius:18px}\n#content .card{padding:20px}\n');
   fs.writeFileSync(path.join(root, 'web', MODULES_FILENAME),
     '/* CSS de módulos teste */\n#content .t391-card{border-radius:13px}\n#content .btn.danger{color:red}\n');
+  fs.writeFileSync(path.join(root, 'web', INTERACTIONS_FILENAME),
+    '/* CSS de interações teste */\n#modalBack .modal{border-radius:22px}\n#content .table th{color:white}\n#toast{border-radius:14px}\n');
   return { root, original, indexPath: path.join(root, 'web', 'index.html') };
 }
 
@@ -141,6 +143,86 @@ test('CSS modular protege indicadores personalizados, SLA e botoes perigosos', (
   assert.doesNotMatch(css, /<script|<\/style/i);
 });
 
+test('tres camadas seguem ordem base, modulos e interacoes em unico estilo', t => {
+  const x = fixture(t);
+  applyVisualPremium(x.root);
+  const html = fs.readFileSync(x.indexPath, 'utf8');
+  assert.equal((html.match(new RegExp('<style id="' + STYLE_ID + '">', 'g')) || []).length, 1);
+  const baseIndex = html.indexOf('#content .kpi{border-radius:18px}');
+  const modulesIndex = html.indexOf('#content .t391-card{border-radius:13px}');
+  const interactionsIndex = html.indexOf('#modalBack .modal{border-radius:22px}');
+  assert.ok(baseIndex > -1 && modulesIndex > baseIndex && interactionsIndex > modulesIndex);
+  assert.equal(html.replace(STYLE_REGEX, ''), x.original);
+  assert.equal(applyVisualPremium(x.root).changed, false);
+});
+
+test('mudanca apenas no CSS de interacoes atualiza estilo sem tocar em JS ou markup', t => {
+  const x = fixture(t);
+  applyVisualPremium(x.root);
+  fs.appendFileSync(path.join(x.root, 'web', INTERACTIONS_FILENAME),
+    '#modalBack .field .input:focus{outline:2px solid var(--accent)}\n');
+  assert.equal(applyVisualPremium(x.root).changed, true);
+  const html = fs.readFileSync(x.indexPath, 'utf8');
+  assert.ok(html.includes('#modalBack .field .input:focus'));
+  assert.equal(html.replace(STYLE_REGEX, ''), x.original);
+  assert.equal(applyVisualPremium(x.root).changed, false);
+});
+
+test('arquivo de interacoes ausente nao permite escrita parcial no HTML', t => {
+  const x = fixture(t);
+  fs.rmSync(path.join(x.root, 'web', INTERACTIONS_FILENAME));
+  assert.throws(() => applyVisualPremium(x.root), /ENOENT/);
+  assert.equal(fs.readFileSync(x.indexPath, 'utf8'), x.original);
+});
+
+test('interacoes CSS com markup potencialmente perigoso sao bloqueadas', t => {
+  const x = fixture(t);
+  fs.writeFileSync(path.join(x.root, 'web', INTERACTIONS_FILENAME), '</style><script>alert(1)</script>');
+  assert.throws(() => applyVisualPremium(x.root), /stylesheet invalido/);
+  assert.equal(fs.readFileSync(x.indexPath, 'utf8'), x.original);
+});
+
+test('CSS fase 3 cobre formularios, tabelas, modal, toast e estados acessiveis', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'web', INTERACTIONS_FILENAME), 'utf8');
+  for(const selector of [
+    '#content .field label', '#content .table-wrap', '#content .table th',
+    '#content .table td', '#content .table tbody tr:focus-within td',
+    '#modalBack .modal', '#modalBack .modal-head', '#modalBack #modalBody',
+    '#modalBack .field label', '#toast', '#content .btn.danger'
+  ]) {
+    assert.ok(css.includes(selector), 'seletor esperado ausente: ' + selector);
+  }
+  assert.match(css, /\[aria-invalid="true"\]/);
+  assert.match(css, /:focus-visible/);
+  assert.match(css, /:disabled/);
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /@media\(max-width:430px\)/);
+  assert.match(css, /var\(--accent\)/);
+  assert.doesNotMatch(css, /<script|<\/style/i);
+  assert.doesNotMatch(css, /(?:^|[\s,])\.hidden\s*\{/m);
+});
+
+test('HTML original inclui modal e toast fora do content, e patch CSS nao altera estado', t => {
+  const original = '<!doctype html><html><head></head><body>' +
+    '<div id="content"><button onclick="newClient()">Cliente</button>' +
+    '<table class="table"><thead><tr><th>Leads</th></tr></thead></table></div>' +
+    '<div id="modalBack" class="modal-back hidden">' +
+    '<div class="modal"><div class="modal-head"><h2 id="modalTitle">Cliente</h2>' +
+    '<button class="btn" onclick="closeModal()">×</button></div>' +
+    '<div id="modalBody"><form onsubmit="saveClient()">' +
+    '<input class="input" id="clientName"></form></div></div></div>' +
+    '<div id="toast" class="toast hidden"></div>' +
+    '<script>function closeModal(){ return true; }</script></body></html>';
+  const x = fixture(t, original);
+  applyVisualPremium(x.root);
+  const updated = fs.readFileSync(x.indexPath, 'utf8');
+  assert.equal(updated.replace(STYLE_REGEX, ''), original);
+  assert.ok(updated.includes('class="modal-back hidden"'));
+  assert.ok(updated.includes('class="toast hidden"'));
+  assert.ok(updated.includes('onsubmit="saveClient()"'));
+  assert.ok(updated.includes('onclick="closeModal()"'));
+});
+
 test('no CI, HTML final do build possui uma única camada visual no fim do head', () => {
   if (process.env.GITHUB_ACTIONS !== 'true') return;
   const html = fs.readFileSync(path.join(__dirname, '..', 'web', 'index.html'), 'utf8');
@@ -151,6 +233,11 @@ test('no CI, HTML final do build possui uma única camada visual no fim do head'
   assert.ok(html.includes('#content .commercial366-card.overdue'));
   assert.ok(html.includes('#content .t391-card.sla-over'));
   assert.ok(html.includes('#content .btn.danger'));
+  assert.ok(html.includes('#modalBack .modal{') || html.includes('#modalBack .modal {'));
+  assert.ok(html.includes('#content .table tbody tr:focus-within td'));
+  assert.ok(html.includes('#toast {') || html.includes('#toast{'));
+  assert.ok(html.includes('id="modalBack"'));
+  assert.ok(html.includes('id="toast"'));
   assert.equal((html.match(new RegExp('<style id="' + STYLE_ID + '">', 'g')) || []).length, 1);
   assert.ok(html.includes("openSec('pipeline')"));
   assert.ok(html.includes('onclick="newClient()"'));
