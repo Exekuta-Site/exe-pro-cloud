@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { applyVisualPremium, STYLE_ID, STYLE_FILENAME, STYLE_REGEX } = require('../tools/apply-premium-visual-450');
+const { applyVisualPremium, STYLE_ID, STYLE_FILENAME, MODULES_FILENAME, STYLE_REGEX } = require('../tools/apply-premium-visual-450');
 
 function fixture(t, html) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'exe-pro-premium-'));
@@ -19,6 +19,8 @@ function fixture(t, html) {
   fs.writeFileSync(path.join(root, 'web', 'index.html'), original);
   fs.writeFileSync(path.join(root, 'web', STYLE_FILENAME),
     '/* CSS de teste */\n#content .kpi{border-radius:18px}\n#content .card{padding:20px}\n');
+  fs.writeFileSync(path.join(root, 'web', MODULES_FILENAME),
+    '/* CSS de módulos teste */\n#content .t391-card{border-radius:13px}\n#content .btn.danger{color:red}\n');
   return { root, original, indexPath: path.join(root, 'web', 'index.html') };
 }
 
@@ -91,6 +93,54 @@ test('stylesheet oficial cobre dashboard, cards, modulos e mobile sem JS', () =>
   assert.doesNotMatch(css, /<\/script|<script|<\/style/i);
 });
 
+test('segunda camada de modulos integra mesmo bloco e preserva handlers originais', t => {
+  const x = fixture(t);
+  applyVisualPremium(x.root);
+  const html = fs.readFileSync(x.indexPath, 'utf8');
+  assert.equal((html.match(new RegExp('<style id="' + STYLE_ID + '">', 'g')) || []).length, 1);
+  assert.ok(html.includes('#content .kpi{border-radius:18px}'));
+  assert.ok(html.includes('#content .t391-card{border-radius:13px}'));
+  assert.ok(html.indexOf('#content .kpi{border-radius:18px}') < html.indexOf('#content .t391-card{border-radius:13px}'));
+  assert.equal(html.replace(STYLE_REGEX, ''), x.original);
+});
+
+test('troca exclusiva do CSS modular reaplica com idempotencia', t => {
+  const x = fixture(t);
+  applyVisualPremium(x.root);
+  const first = fs.readFileSync(x.indexPath, 'utf8');
+  fs.appendFileSync(path.join(x.root, 'web', MODULES_FILENAME), '#content .t391-col{min-width:0}\n');
+  const changed = applyVisualPremium(x.root);
+  assert.equal(changed.changed, true);
+  const second = fs.readFileSync(x.indexPath, 'utf8');
+  assert.notEqual(second, first);
+  assert.ok(second.includes('#content .t391-col{min-width:0}'));
+  assert.equal(second.replace(STYLE_REGEX, ''), x.original);
+  assert.equal(applyVisualPremium(x.root).changed, false);
+});
+
+test('arquivo modular ausente falha antes de escrever HTML', t => {
+  const x = fixture(t);
+  fs.rmSync(path.join(x.root, 'web', MODULES_FILENAME));
+  assert.throws(() => applyVisualPremium(x.root), /ENOENT/);
+  assert.equal(fs.readFileSync(x.indexPath, 'utf8'), x.original);
+});
+
+test('CSS modular protege indicadores personalizados, SLA e botoes perigosos', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'web', MODULES_FILENAME), 'utf8');
+  for (const selector of [
+    '#content .t391-kpis', '#content .b384-kpis', '#content .seo382-kpis',
+    '#content .commercial366-card.overdue', '#content .t391-card.sla-over',
+    '#content .prospect365-grid', '#content .prospect365-address',
+    '#content .btn.danger', '#content .status.bad'
+  ]) {
+    assert.ok(css.includes(selector), 'seletor de seguranca visual ausente: ' + selector);
+  }
+  assert.match(css, /@media\(max-width:620px\)/);
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /var\(--accent\)/);
+  assert.doesNotMatch(css, /<script|<\/style/i);
+});
+
 test('no CI, HTML final do build possui uma única camada visual no fim do head', () => {
   if (process.env.GITHUB_ACTIONS !== 'true') return;
   const html = fs.readFileSync(path.join(__dirname, '..', 'web', 'index.html'), 'utf8');
@@ -98,6 +148,10 @@ test('no CI, HTML final do build possui uma única camada visual no fim do head'
   assert.equal(marks.length, 1);
   assert.ok(html.indexOf('id="' + STYLE_ID + '"') < html.indexOf('</head>'));
   assert.ok(html.includes('function renderDashboard()'));
+  assert.ok(html.includes('#content .commercial366-card.overdue'));
+  assert.ok(html.includes('#content .t391-card.sla-over'));
+  assert.ok(html.includes('#content .btn.danger'));
+  assert.equal((html.match(new RegExp('<style id="' + STYLE_ID + '">', 'g')) || []).length, 1);
   assert.ok(html.includes("openSec('pipeline')"));
   assert.ok(html.includes('onclick="newClient()"'));
 });
