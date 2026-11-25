@@ -66,6 +66,13 @@
   border-color: #e88491;
   box-shadow: 0 0 0 3px rgba(232,132,145,.15)
 }
+/* A classe .input usa :not([type]) no estilo-base, com maior especificidade.
+   Reforçar apenas a borda e o halo de erro, preservando campos desativados. */
+#content .field .input:not([type="color"]):not([type="file"])[aria-invalid="true"]:not(:disabled),
+#modalBack .field .input:not([type="color"]):not([type="file"])[aria-invalid="true"]:not(:disabled) {
+  border-color: #e88491;
+  box-shadow: 0 0 0 3px rgba(232,132,145,.15)
+}
 #content .field :is(input,select,textarea):disabled,
 #modalBack .field :is(input,select,textarea):disabled {
   opacity: .64;
