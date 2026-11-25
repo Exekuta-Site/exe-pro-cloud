@@ -1,6 +1,6 @@
 # EXE PRO v4.4.0 — Laboratório descartável para validar dependências do prebuilt
 
-**Registro:** 25/11/2026 · **Status:** pacote validado no laboratório local; instalação local bloqueada pela rede do ambiente; CI com laboratório descartável preparado para execução e verificação.  
+**Registro:** 25/11/2026 · **Status:** pacote validado localmente; instalação local bloqueada por DNS; instalação em laboratório descartável do GitHub Actions **concluída com sucesso**, sem iniciar servidor nem conectar a banco.  
 **Branch exclusiva:** `test/prebuilt-disposable-dependency-lab-4.4.0` baseada em `docs/prebuilt-homologation-plan-4.4.0` (PR #6).  
 **Escopo da autorização:** laboratório isolado, instalar dependências com scripts de instalação desativados, conferir lockfile e hashes, **sem iniciar servidor nem conectar PostgreSQL**.
 
@@ -62,7 +62,7 @@ A etapa `Disposable dependency laboratory (no server or database)` faz o seguint
 
 **Nota de interpretação:** `check:bundle` exige que **nenhum arquivo extra exista** e, por isso, é feito **antes** da instalação; após adicionar `node_modules/`, o teste pertinente é `node tools/prebuilt-artifact.js verify`. Isso não enfraquece a verificação dos 93 artefatos registrados no manifesto.
 
-**Conclusão de CI:** registrar posteriormente, somente após verificar o status real da execução no GitHub. Não tratar a ausência de erros aparentes como prova de teste concluído.
+**Conclusão de CI:** execução verificada e concluída com sucesso; evidência detalhada na seção 5.
 
 ## 4. Riscos residuais e critérios de aprovação
 
@@ -82,3 +82,21 @@ A etapa `Disposable dependency laboratory (no server or database)` faz o seguint
 Avaliar uma **simulação puramente estática de configuração de homologação**, usando apenas valores sintéticos e sem criar serviços. Não executar aplicação/DB ou instalar infraestrutura como consequência automática desta etapa.
 
 **Limites:** nenhuma publicação, merge, webhook, mudança no comando de inicialização, aquisição de recursos ou operação de PostgreSQL/produção. Preservar todos os PRs como rascunho e o planejamento adicional de backups encerrado.
+
+## 5. Resultado confirmado do GitHub Actions
+
+**Execução:** [EXE PRO Cloudways CI #45628735145](https://github.com/Exekuta-Site/exe-pro-cloud/actions/runs/45628735145).  
+**Commit conferido:** `352267654bdd9054c20efe8cfc23a98fa6f80c1e` (estado anterior à presente atualização documental).  
+**Estado verificado:** `completed` / **`success`**; job `build` concluído com sucesso, **todas as etapas aprovadas**.
+
+A etapa **`Disposable dependency laboratory (no server or database)`**, em particular, foi confirmada como `completed/success`, o que implica que a sequência parou com sucesso somente após:
+- `npm ci --omit=dev --ignore-scripts --no-audit --no-fund` instalar dependências **em pasta temporária do runner**;
+- SHA-256 do `package-lock.json` permanecer inalterado;
+- `node tools/prebuilt-artifact.js verify` aprovar integridade **depois da instalação**;
+- `npm ls --omit=dev --depth=0` terminar sem erro;
+- versão de `pg` instalada coincidir com a versão do lockfile (8.23.1);
+- verificação de sintaxe de `server.js` ser aprovada.
+
+**Interpretação correta:** dependências instaladas **no runner descartável do CI**, não no laboratório local; local permaneceu impossibilitado por DNS. **Não houve startup do aplicativo nem acesso ao PostgreSQL**. O CI do workflow existente realiza build e regressão de código, mas não testes funcionais de login/Portal ou conexão a banco.
+
+A atualização deste documento no GitHub cria novo commit e pode iniciar outro CI, cujo estado deve ser verificado separadamente. **A aprovação acima se refere estritamente à execução #45628735145.**
